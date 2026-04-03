@@ -39,18 +39,18 @@ export default async function handler(req, res) {
       throw new Error(err.message || 'Tạo repo thất bại');
     }
 
-    // Nội dung workflow YAML
+    // Nội dung workflow YAML (đã được tối ưu)
     const workflowYaml = `name: VPS Glass Deploy
 
 on:
   workflow_dispatch:
     inputs:
       duration:
-        description: 'Thời gian (phút)'
+        description: 'Thoi gian song (phut)'
         required: true
         default: '120'
       target_os:
-        description: 'Hệ điều hành'
+        description: 'He dieu hanh'
         required: true
         default: 'windows'
       tailscale_token:
@@ -71,7 +71,7 @@ jobs:
         if: github.event.inputs.tailscale_token != ''
         run: |
           choco install tailscale -y
-          tailscale login --auth-key \${{ github.event.inputs.tailscale_token }}
+          tailscale login --auth-key ${{ github.event.inputs.tailscale_token }}
           tailscale up
       - name: Create User
         run: |
@@ -81,16 +81,11 @@ jobs:
           net localgroup Administrators $user /add
           echo "VM_USER=$user" >> $env:GITHUB_ENV
           echo "VM_PASS=$pass" >> $env:GITHUB_ENV
-      - name: Get IP
+      - name: Get Public IP
         run: |
           $ip = (Invoke-WebRequest -Uri https://api.ipify.org -UseBasicParsing).Content
           echo "PUBLIC_IP=$ip" >> $env:GITHUB_ENV
-      - name: Keep Alive
-        run: |
-          $dur = [int]"\${{ github.event.inputs.duration }}"
-          $end = (Get-Date).AddMinutes($dur)
-          while ((Get-Date) -lt $end) { Start-Sleep -Seconds 60 }
-      - name: Show Info
+      - name: Show Connection Info
         run: |
           Write-Host "========================================="
           Write-Host "VM READY - WINDOWS"
@@ -99,6 +94,15 @@ jobs:
           Write-Host "Password: $env:VM_PASS"
           Write-Host "Port RDP: 3389"
           Write-Host "========================================="
+      - name: Keep Alive
+        run: |
+          $dur = [int]"${{ github.event.inputs.duration }}"
+          $end = (Get-Date).AddMinutes($dur)
+          while ((Get-Date) -lt $end) {
+            $remain = [math]::Round(($end - (Get-Date)).TotalMinutes)
+            Write-Host "Con $remain phut - VM dang hoat dong"
+            Start-Sleep -Seconds 60
+          }
 
   ubuntu:
     runs-on: ubuntu-latest
@@ -115,35 +119,39 @@ jobs:
         if: github.event.inputs.tailscale_token != ''
         run: |
           curl -fsSL https://tailscale.com/install.sh | sh
-          sudo tailscale login --auth-key \${{ github.event.inputs.tailscale_token }}
+          sudo tailscale login --auth-key ${{ github.event.inputs.tailscale_token }}
           sudo tailscale up
       - name: Create User
         run: |
-          USER="glass_\$((RANDOM % 9000 + 1000))"
-          PASS=\$(openssl rand -base64 14 | tr -d '=+/' | cut -c1-14)
-          sudo useradd -m -s /bin/bash "\$USER"
-          echo "\$USER:\$PASS" | sudo chpasswd
-          sudo usermod -aG sudo "\$USER"
-          echo "VM_USER=\$USER" >> \$GITHUB_ENV
-          echo "VM_PASS=\$PASS" >> \$GITHUB_ENV
-      - name: Get IP
+          USER="glass_$((RANDOM % 9000 + 1000))"
+          PASS=$(openssl rand -base64 14 | tr -d '=+/' | cut -c1-14)
+          sudo useradd -m -s /bin/bash "$USER"
+          echo "$USER:$PASS" | sudo chpasswd
+          sudo usermod -aG sudo "$USER"
+          echo "VM_USER=$USER" >> $GITHUB_ENV
+          echo "VM_PASS=$PASS" >> $GITHUB_ENV
+      - name: Get Public IP
         run: |
-          IP=\$(curl -s https://api.ipify.org)
-          echo "PUBLIC_IP=\$IP" >> \$GITHUB_ENV
-      - name: Keep Alive
-        run: |
-          DUR=\${{ github.event.inputs.duration }}
-          END=\$(( \$(date +%s) + DUR * 60 ))
-          while [ \$(date +%s) -lt \$END ]; do sleep 60; done
-      - name: Show Info
+          IP=$(curl -s https://api.ipify.org)
+          echo "PUBLIC_IP=$IP" >> $GITHUB_ENV
+      - name: Show Connection Info
         run: |
           echo "========================================="
           echo "VM READY - UBUNTU"
-          echo "IP: \$PUBLIC_IP"
-          echo "User: \$VM_USER"
-          echo "Password: \$VM_PASS"
+          echo "IP: $PUBLIC_IP"
+          echo "User: $VM_USER"
+          echo "Password: $VM_PASS"
           echo "Port SSH: 22"
           echo "========================================="
+      - name: Keep Alive
+        run: |
+          DUR=${{ github.event.inputs.duration }}
+          END=$(($(date +%s) + DUR * 60))
+          while [ $(date +%s) -lt $END ]; do
+            REMAIN=$(( ($END - $(date +%s)) / 60 ))
+            echo "Con $REMAIN phut - VM dang hoat dong"
+            sleep 60
+          done
 `;
 
     // Upload workflow lên repo
@@ -172,6 +180,7 @@ jobs:
     });
 
   } catch (error) {
+    console.error('Error:', error);
     res.status(500).json({ error: error.message });
   }
 }
