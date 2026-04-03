@@ -1,19 +1,19 @@
-name: Neural VM Deploy
+name: VPS Glass Deploy
 
 on:
   workflow_dispatch:
     inputs:
       duration:
-        description: 'Duration minutes'
+        description: 'Thoi gian song (phut)'
         required: true
         default: '120'
       target_os:
-        description: 'Target OS'
+        description: 'He dieu hanh'
         required: true
         default: 'windows'
-
-env:
-  TAILSCALE_AUTH_KEY: ${{ secrets.TAILSCALE_AUTH_KEY }}
+      tailscale_token:
+        description: 'Tailscale Auth Key'
+        required: false
 
 jobs:
   windows:
@@ -25,220 +25,88 @@ jobs:
         run: |
           Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server' -Name "fDenyTSConnections" -Value 0 -Force
           netsh advfirewall firewall add rule name="RDP" dir=in action=allow protocol=TCP localport=3389
+      - name: Install Tailscale
+        if: github.event.inputs.tailscale_token != ''
+        run: |
+          choco install tailscale -y
+          tailscale login --auth-key ${{ github.event.inputs.tailscale_token }}
+          tailscale up
       - name: Create User
         run: |
-          $user = "vmuser_" + (Get-Random -Minimum 1000 -Maximum 9999)
-          $pass = -join (((65..90) + (97..122) + (48..57)) | Get-Random -Count 16 | ForEach-Object {[char]$_})
+          $user = "glass_" + (Get-Random -Minimum 1000 -Maximum 9999)
+          $pass = -join (((65..90) + (97..122) + (48..57)) | Get-Random -Count 14 | ForEach-Object {[char]$_})
           net user $user $pass /add
           net localgroup Administrators $user /add
-          echo "USERNAME=$user" >> $env:GITHUB_ENV
-          echo "PASSWORD=$pass" >> $env:GITHUB_ENV
+          echo "VM_USER=$user" >> $env:GITHUB_ENV
+          echo "VM_PASS=$pass" >> $env:GITHUB_ENV
       - name: Get Public IP
         run: |
           $ip = (Invoke-WebRequest -Uri https://api.ipify.org -UseBasicParsing).Content
           echo "PUBLIC_IP=$ip" >> $env:GITHUB_ENV
-      - name: Install Tailscale
-        if: env.TAILSCALE_AUTH_KEY != ''
+      - name: Show Connection Info
         run: |
-          Invoke-WebRequest -Uri "https://pkgs.tailscale.com/stable/tailscale-setup-latest-amd64.msi" -OutFile tailscale.msi
-          msiexec /i tailscale.msi /quiet
-          Start-Sleep -Seconds 10
-          & 'C:\Program Files\Tailscale\tailscale.exe' up --authkey="$env:TAILSCALE_AUTH_KEY" --accept-routes
-          $tsIp = & 'C:\Program Files\Tailscale\tailscale.exe' ip -4
-          echo "TAILSCALE_IP=$tsIp" >> $env:GITHUB_ENV
+          Write-Host "========================================="
+          Write-Host "VM READY - WINDOWS"
+          Write-Host "IP: $env:PUBLIC_IP"
+          Write-Host "User: $env:VM_USER"
+          Write-Host "Password: $env:VM_PASS"
+          Write-Host "Port RDP: 3389"
+          Write-Host "========================================="
       - name: Keep Alive
         run: |
           $dur = [int]"${{ github.event.inputs.duration }}"
           $end = (Get-Date).AddMinutes($dur)
           while ((Get-Date) -lt $end) {
-            Write-Host "Windows VM Active - Time remaining: $($end - (Get-Date))"
+            $remain = [math]::Round(($end - (Get-Date)).TotalMinutes)
+            Write-Host "Con $remain phut - VM dang hoat dong"
             Start-Sleep -Seconds 60
           }
 
-  ubuntu22:
-    runs-on: ubuntu-22.04
-    if: github.event.inputs.target_os == 'ubuntu22'
+  ubuntu:
+    runs-on: ubuntu-latest
+    if: github.event.inputs.target_os == 'ubuntu'
     timeout-minutes: 360
     steps:
       - name: Setup SSH
         run: |
           sudo apt update -qq
-          sudo apt install -y -qq openssh-server
+          sudo apt install -y -qq openssh-server curl
           sudo systemctl enable ssh
           sudo systemctl start ssh
+      - name: Install Tailscale
+        if: github.event.inputs.tailscale_token != ''
+        run: |
+          curl -fsSL https://tailscale.com/install.sh | sh
+          sudo tailscale login --auth-key ${{ github.event.inputs.tailscale_token }}
+          sudo tailscale up
       - name: Create User
         run: |
-          USER="ub_$((RANDOM % 9000 + 1000))"
-          PASS=$(openssl rand -base64 16 | tr -d '=+/' | cut -c1-20)
+          USER="glass_$((RANDOM % 9000 + 1000))"
+          PASS=$(openssl rand -base64 14 | tr -d '=+/' | cut -c1-14)
           sudo useradd -m -s /bin/bash "$USER"
           echo "$USER:$PASS" | sudo chpasswd
           sudo usermod -aG sudo "$USER"
-          echo "USERNAME=$USER" >> $GITHUB_ENV
-          echo "PASSWORD=$PASS" >> $GITHUB_ENV
+          echo "VM_USER=$USER" >> $GITHUB_ENV
+          echo "VM_PASS=$PASS" >> $GITHUB_ENV
       - name: Get Public IP
         run: |
           IP=$(curl -s https://api.ipify.org)
           echo "PUBLIC_IP=$IP" >> $GITHUB_ENV
-      - name: Install Tailscale
-        if: env.TAILSCALE_AUTH_KEY != ''
+      - name: Show Connection Info
         run: |
-          curl -fsSL https://tailscale.com/install.sh | sh
-          sudo tailscale up --auth-key="$TAILSCALE_AUTH_KEY" --accept-routes
-          TS_IP=$(tailscale ip -4)
-          echo "TAILSCALE_IP=$TS_IP" >> $GITHUB_ENV
+          echo "========================================="
+          echo "VM READY - UBUNTU"
+          echo "IP: $PUBLIC_IP"
+          echo "User: $VM_USER"
+          echo "Password: $VM_PASS"
+          echo "Port SSH: 22"
+          echo "========================================="
       - name: Keep Alive
         run: |
           DUR=${{ github.event.inputs.duration }}
-          END=$(( $(date +%s) + DUR * 60 ))
+          END=$(($(date +%s) + DUR * 60))
           while [ $(date +%s) -lt $END ]; do
-            echo "Ubuntu VM Active - Time remaining: $(( ($END - $(date +%s)) / 60 )) minutes"
+            REMAIN=$(( ($END - $(date +%s)) / 60 ))
+            echo "Con $REMAIN phut - VM dang hoat dong"
             sleep 60
           done
-
-  ubuntu24:
-    runs-on: ubuntu-24.04
-    if: github.event.inputs.target_os == 'ubuntu24'
-    timeout-minutes: 360
-    steps:
-      - name: Setup SSH
-        run: |
-          sudo apt update -qq
-          sudo apt install -y -qq openssh-server
-          sudo systemctl enable ssh
-          sudo systemctl start ssh
-      - name: Create User
-        run: |
-          USER="ub24_$((RANDOM % 9000 + 1000))"
-          PASS=$(openssl rand -base64 16 | tr -d '=+/' | cut -c1-20)
-          sudo useradd -m -s /bin/bash "$USER"
-          echo "$USER:$PASS" | sudo chpasswd
-          sudo usermod -aG sudo "$USER"
-          echo "USERNAME=$USER" >> $GITHUB_ENV
-          echo "PASSWORD=$PASS" >> $GITHUB_ENV
-      - name: Get Public IP
-        run: |
-          IP=$(curl -s https://api.ipify.org)
-          echo "PUBLIC_IP=$IP" >> $GITHUB_ENV
-      - name: Install Tailscale
-        if: env.TAILSCALE_AUTH_KEY != ''
-        run: |
-          curl -fsSL https://tailscale.com/install.sh | sh
-          sudo tailscale up --auth-key="$TAILSCALE_AUTH_KEY" --accept-routes
-          TS_IP=$(tailscale ip -4)
-          echo "TAILSCALE_IP=$TS_IP" >> $GITHUB_ENV
-      - name: Keep Alive
-        run: |
-          DUR=${{ github.event.inputs.duration }}
-          sleep $((DUR * 60))
-
-  debian:
-    runs-on: ubuntu-latest
-    container:
-      image: debian:12
-    if: github.event.inputs.target_os == 'debian'
-    timeout-minutes: 360
-    steps:
-      - name: Setup SSH
-        run: |
-          apt update -qq
-          apt install -y -qq openssh-server sudo curl
-          ssh-keygen -A
-          /usr/sbin/sshd
-      - name: Create User
-        run: |
-          USER="deb_$((RANDOM % 9000 + 1000))"
-          PASS=$(openssl rand -base64 16 | tr -d '=+/' | cut -c1-20)
-          useradd -m -s /bin/bash "$USER"
-          echo "$USER:$PASS" | chpasswd
-          usermod -aG sudo "$USER"
-          echo "USERNAME=$USER" >> $GITHUB_ENV
-          echo "PASSWORD=$PASS" >> $GITHUB_ENV
-      - name: Get Public IP
-        run: |
-          IP=$(wget -qO- https://api.ipify.org)
-          echo "PUBLIC_IP=$IP" >> $GITHUB_ENV
-      - name: Install Tailscale
-        if: env.TAILSCALE_AUTH_KEY != ''
-        run: |
-          curl -fsSL https://tailscale.com/install.sh | sh
-          tailscale up --auth-key="$TAILSCALE_AUTH_KEY" --accept-routes
-          TS_IP=$(tailscale ip -4)
-          echo "TAILSCALE_IP=$TS_IP" >> $GITHUB_ENV
-      - name: Keep Alive
-        run: |
-          DUR=${{ github.event.inputs.duration }}
-          sleep $((DUR * 60))
-
-  centos:
-    runs-on: ubuntu-latest
-    container:
-      image: quay.io/centos/centos:stream9
-    if: github.event.inputs.target_os == 'centos'
-    timeout-minutes: 360
-    steps:
-      - name: Setup SSH
-        run: |
-          dnf install -y openssh-server sudo curl
-          ssh-keygen -A
-          /usr/sbin/sshd
-      - name: Create User
-        run: |
-          USER="cent_$((RANDOM % 9000 + 1000))"
-          PASS=$(openssl rand -base64 16 | tr -d '=+/' | cut -c1-20)
-          useradd -m -s /bin/bash "$USER"
-          echo "$USER:$PASS" | chpasswd
-          usermod -aG wheel "$USER"
-          echo "USERNAME=$USER" >> $GITHUB_ENV
-          echo "PASSWORD=$PASS" >> $GITHUB_ENV
-      - name: Get Public IP
-        run: |
-          IP=$(curl -s https://api.ipify.org)
-          echo "PUBLIC_IP=$IP" >> $GITHUB_ENV
-      - name: Install Tailscale
-        if: env.TAILSCALE_AUTH_KEY != ''
-        run: |
-          curl -fsSL https://tailscale.com/install.sh | sh
-          tailscale up --auth-key="$TAILSCALE_AUTH_KEY" --accept-routes
-          TS_IP=$(tailscale ip -4)
-          echo "TAILSCALE_IP=$TS_IP" >> $GITHUB_ENV
-      - name: Keep Alive
-        run: |
-          DUR=${{ github.event.inputs.duration }}
-          sleep $((DUR * 60))
-
-  almalinux:
-    runs-on: ubuntu-latest
-    container:
-      image: almalinux:9
-    if: github.event.inputs.target_os == 'almalinux'
-    timeout-minutes: 360
-    steps:
-      - name: Setup SSH
-        run: |
-          dnf install -y openssh-server sudo curl
-          ssh-keygen -A
-          /usr/sbin/sshd
-      - name: Create User
-        run: |
-          USER="alma_$((RANDOM % 9000 + 1000))"
-          PASS=$(openssl rand -base64 16 | tr -d '=+/' | cut -c1-20)
-          useradd -m -s /bin/bash "$USER"
-          echo "$USER:$PASS" | chpasswd
-          usermod -aG wheel "$USER"
-          echo "USERNAME=$USER" >> $GITHUB_ENV
-          echo "PASSWORD=$PASS" >> $GITHUB_ENV
-      - name: Get Public IP
-        run: |
-          IP=$(curl -s https://api.ipify.org)
-          echo "PUBLIC_IP=$IP" >> $GITHUB_ENV
-      - name: Install Tailscale
-        if: env.TAILSCALE_AUTH_KEY != ''
-        run: |
-          curl -fsSL https://tailscale.com/install.sh | sh
-          tailscale up --auth-key="$TAILSCALE_AUTH_KEY" --accept-routes
-          TS_IP=$(tailscale ip -4)
-          echo "TAILSCALE_IP=$TS_IP" >> $GITHUB_ENV
-      - name: Keep Alive
-        run: |
-          DUR=${{ github.event.inputs.duration }}
-          sleep $((DUR * 60))
