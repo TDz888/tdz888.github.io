@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Neural VM - Tạo máy chủ ảo</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #0a0a2a 0%, #1a1a3a 100%);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .card {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        
+        h1 {
+            color: #00ff88;
+            text-align: center;
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #aaa;
+            font-size: 14px;
+        }
+        
+        h2 {
+            color: #00ff88;
+            font-size: 18px;
+            margin-bottom: 15px;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            color: white;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+        
+        select, input {
+            width: 100%;
+            padding: 12px;
+            border-radius: 10px;
+            border: 1px solid #00ff88;
+            background: rgba(0,0,0,0.5);
+            color: white;
+            font-size: 16px;
+        }
+        
+        button {
+            background: linear-gradient(90deg, #00ff88, #00aaff);
+            color: #0a0a2a;
+            padding: 14px;
+            border: none;
+            border-radius: 30px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 10px;
+        }
+        
+        button:disabled {
+            opacity: 0.5;
+        }
+        
+        .status {
+            margin-top: 15px;
+            padding: 12px;
+            border-radius: 10px;
+            display: none;
+            font-size: 14px;
+        }
+        
+        .status.show {
+            display: block;
+        }
+        
+        .status.success {
+            background: rgba(0,255,136,0.2);
+            border: 1px solid #00ff88;
+            color: #00ff88;
+        }
+        
+        .status.error {
+            background: rgba(255,0,0,0.2);
+            border: 1px solid red;
+            color: #ff6666;
+        }
+        
+        .status.loading {
+            background: rgba(255,165,0,0.2);
+            border: 1px solid orange;
+            color: orange;
+        }
+        
+        .info-text {
+            color: #aaa;
+            font-size: 12px;
+            margin-top: 8px;
+        }
+        
+        .badge {
+            display: inline-block;
+            background: #00ff88;
+            color: #0a0a2a;
+            padding: 4px 10px;
+            border-radius: 15px;
+            font-size: 11px;
+            font-weight: bold;
+            margin-right: 8px;
+        }
+        
+        .connection-box {
+            background: rgba(0,0,0,0.5);
+            border-radius: 10px;
+            padding: 12px;
+            margin-top: 10px;
+            font-family: monospace;
+            font-size: 12px;
+        }
+        
+        .option-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 5px;
+        }
+        
+        .option-btn {
+            background: rgba(255,255,255,0.1);
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+            cursor: pointer;
+            border: 1px solid #444;
+        }
+        
+        .option-btn.active {
+            background: #00ff88;
+            color: #0a0a2a;
+            border-color: #00ff88;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+            font-size: 12px;
+        }
+        
+        .spinner {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+            margin-right: 8px;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <h1>🧠 NEURAL VM</h1>
+            <p class="subtitle">Tạo máy chủ ảo chỉ với 1 chạm</p>
+        </div>
+        
+        <div class="card">
+            <h2>🔐 CẤU HÌNH GITHUB</h2>
+            <div class="form-group">
+                <label>🔑 GitHub Token</label>
+                <input type="password" id="github_token" placeholder="ghp_xxxxxxxxxxxx">
+                <div class="info-text">📌 Tạo token: GitHub Settings → Developer settings → Personal access tokens → Generate (chọn repo, workflow)</div>
+            </div>
+            <div class="form-group">
+                <label>👤 Tên đăng nhập GitHub</label>
+                <input type="text" id="github_owner" placeholder="username của bạn">
+            </div>
+            <div class="form-group">
+                <label>📁 Tên repository</label>
+                <input type="text" id="github_repo" placeholder="neural-vm-host">
+            </div>
+            <button onclick="saveConfig()">💾 LƯU CẤU HÌNH</button>
+        </div>
+        
+        <div class="card">
+            <h2>⚙️ CẤU HÌNH VM</h2>
+            <div class="form-group">
+                <label>⏱️ Thời gian sử dụng</label>
+                <select id="duration">
+                    <option value="30m">30 phút</option>
+                    <option value="1h">1 giờ</option>
+                    <option value="2h" selected>2 giờ</option>
+                    <option value="4h">4 giờ</option>
+                    <option value="6h">6 giờ</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>💿 Hệ điều hành</label>
+                <select id="target_os">
+                    <option value="windows">🪟 Windows 11</option>
+                    <option value="ubuntu22">🐧 Ubuntu 22.04</option>
+                    <option value="ubuntu24">🐧 Ubuntu 24.04</option>
+                    <option value="debian">🐍 Debian 12</option>
+                    <option value="centos">📦 CentOS 9</option>
+                    <option value="almalinux">🔷 AlmaLinux 9</option>
+                    <option value="all">🚀 Tất cả (6 máy)</option>
+                </select>
+            </div>
+            <button onclick="deployVM()" id="deployBtn">🚀 TẠO MÁY CHỦ</button>
+            <div id="status" class="status"></div>
+        </div>
+        
+        <div class="card">
+            <h2>📖 HƯỚNG DẪN KẾT NỐI</h2>
+            <div class="info-text">
+                <p><span class="badge">1</span> Nhấn "TẠO MÁY CHỦ"</p>
+                <p><span class="badge">2</span> Chờ 2-3 phút</p>
+                <p><span class="badge">3</span> Vào GitHub → Actions xem thông tin</p>
+                <p><span class="badge">4</span> Dùng Remote Desktop để kết nối</p>
+                <p><span class="badge">5</span> IP: [hiển thị trong Actions], Port: 3389</p>
+            </div>
+            <div class="connection-box">
+                📡 Ví dụ kết nối:<br>
+                Máy tính: 172.182.224.164:3389<br>
+                Tài khoản: vmuser_1234<br>
+                Mật khẩu: [xem trong Actions]
+            </div>
+        </div>
+        
+        <footer>
+            Neural VM v4.0 | Bảo mật qua Tailscale | Tự động xóa sau khi hết giờ
+        </footer>
+    </div>
+    
+    <script>
+        function saveConfig() {
+            const token = document.getElementById('github_token').value;
+            const owner = document.getElementById('github_owner').value;
+            const repo = document.getElementById('github_repo').value;
+            
+            if (token && owner && repo) {
+                localStorage.setItem('github_token', token);
+                localStorage.setItem('github_owner', owner);
+                localStorage.setItem('github_repo', repo);
+                alert('✓ Đã lưu cấu hình!');
+            } else {
+                alert('✗ Vui lòng điền đầy đủ thông tin');
+            }
+        }
+        
+        function loadConfig() {
+            const token = localStorage.getItem('github_token');
+            const owner = localStorage.getItem('github_owner');
+            const repo = localStorage.getItem('github_repo');
+            
+            if (token) document.getElementById('github_token').value = token;
+            if (owner) document.getElementById('github_owner').value = owner;
+            if (repo) document.getElementById('github_repo').value = repo;
+        }
+        
+        async function deployVM() {
+            const token = document.getElementById('github_token').value;
+            const owner = document.getElementById('github_owner').value;
+            const repo = document.getElementById('github_repo').value;
+            const duration = document.getElementById('duration').value;
+            const target_os = document.getElementById('target_os').value;
+            
+            if (!token || !owner || !repo) {
+                alert('✗ Vui lòng cấu hình GitHub trước!');
+                return;
+            }
+            
+            const statusDiv = document.getElementById('status');
+            const deployBtn = document.getElementById('deployBtn');
+            
+            statusDiv.className = 'status show loading';
+            statusDiv.innerHTML = '<span class="spinner"></span> Đang tạo máy chủ... Vui lòng chờ 2-3 phút';
+            deployBtn.disabled = true;
+            
+            try {
+                const url = `https://api.github.com/repos/${owner}/${repo}/actions/workflows/deploy-vm.yml/dispatches`;
+                
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Accept': 'application/vnd.github.v3+json',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        ref: 'main',
+                        inputs: {
+                            duration: duration,
+                            target_os: target_os
+                        }
+                    })
+                });
+                
+                if (response.ok) {
+                    statusDiv.className = 'status show success';
+                    statusDiv.innerHTML = '✓ Đã khởi tạo máy chủ thành công!\n\n📱 Vào GitHub → Actions để xem thông tin kết nối (sau 2-3 phút)';
+                } else {
+                    const error = await response.text();
+                    throw new Error(error);
+                }
+            } catch (error) {
+                statusDiv.className = 'status show error';
+                statusDiv.innerHTML = '✗ Tạo máy chủ thất bại: ' + error.message;
+            } finally {
+                deployBtn.disabled = false;
+            }
+        }
+        
+        window.onload = loadConfig;
+    </script>
+</body>
+</html>
