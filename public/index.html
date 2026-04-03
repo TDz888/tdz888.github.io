@@ -1,0 +1,934 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>🚀 VM GENERATOR · Hacker Green Edition</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            background: radial-gradient(ellipse at 30% 20%, #0a1a0a, #030803);
+            font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', 'Inter', monospace;
+            padding: 24px;
+            position: relative;
+        }
+
+        /* Hiệu ứng ma trận nền */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: repeating-linear-gradient(0deg, rgba(0, 255, 0, 0.03) 0px, rgba(0, 255, 0, 0.03) 2px, transparent 2px, transparent 6px);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            color: #0f0;
+            text-shadow: 0 0 10px #0f0, 0 0 20px #0f0;
+            letter-spacing: 4px;
+        }
+
+        .header p {
+            color: #2a8;
+            font-size: 0.8rem;
+            margin-top: 8px;
+        }
+
+        /* Tab chuyển đổi 2 site */
+        .tab-bar {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            margin-bottom: 32px;
+        }
+
+        .tab-btn {
+            background: rgba(0, 30, 0, 0.7);
+            border: 1px solid #0f0;
+            padding: 12px 32px;
+            border-radius: 48px;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #0f0;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: monospace;
+        }
+
+        .tab-btn:hover {
+            background: #0f0;
+            color: #030803;
+            box-shadow: 0 0 15px #0f0;
+        }
+
+        .tab-btn.active {
+            background: #0f0;
+            color: #030803;
+            box-shadow: 0 0 20px #0f0;
+        }
+
+        /* 2 site (tab content) */
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Layout */
+        .dashboard {
+            display: flex;
+            gap: 28px;
+            flex-wrap: wrap;
+        }
+
+        .panel-left {
+            flex: 1;
+            min-width: 320px;
+        }
+
+        .panel-right {
+            flex: 1.5;
+            min-width: 420px;
+        }
+
+        /* Card - phong cách hacker */
+        .card {
+            background: rgba(0, 20, 0, 0.65);
+            backdrop-filter: blur(10px);
+            border-radius: 24px;
+            border: 1px solid #0f0;
+            box-shadow: 0 8px 32px rgba(0, 255, 0, 0.1), inset 0 0 20px rgba(0, 255, 0, 0.05);
+            padding: 28px;
+            margin-bottom: 24px;
+            transition: all 0.3s;
+        }
+
+        .card:hover {
+            box-shadow: 0 8px 32px rgba(0, 255, 0, 0.2);
+            border-color: #2f2;
+        }
+
+        .card-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #0f0;
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-left: 3px solid #0f0;
+            padding-left: 16px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Form */
+        .form-group {
+            margin-bottom: 22px;
+        }
+
+        label {
+            display: block;
+            color: #2a8;
+            font-size: 0.75rem;
+            font-weight: 500;
+            margin-bottom: 8px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        /* Khung điền thông tin - kiểu hacker đẹp */
+        .input-wrapper {
+            position: relative;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 14px 18px;
+            background: rgba(0, 15, 0, 0.9);
+            border: 1px solid #0f0;
+            border-radius: 12px;
+            font-size: 0.9rem;
+            color: #0f0;
+            font-family: 'JetBrains Mono', monospace;
+            transition: all 0.2s;
+        }
+
+        input::placeholder {
+            color: #2a4;
+            font-size: 0.8rem;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: #2f2;
+            box-shadow: 0 0 0 3px rgba(0, 255, 0, 0.2);
+            background: rgba(0, 20, 0, 0.95);
+        }
+
+        select option {
+            background: #030803;
+            color: #0f0;
+        }
+
+        /* Nút bấm */
+        button {
+            background: linear-gradient(105deg, #0a0, #070);
+            border: none;
+            padding: 14px 24px;
+            border-radius: 40px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            color: #030803;
+            width: 100%;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-family: monospace;
+        }
+
+        button:hover {
+            background: linear-gradient(105deg, #0c0, #090);
+            box-shadow: 0 0 15px #0f0;
+            transform: translateY(-2px);
+        }
+
+        button:active {
+            transform: translateY(1px);
+        }
+
+        button:disabled {
+            opacity: 0.5;
+            transform: none;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid #0f0;
+            color: #0f0;
+            box-shadow: none;
+        }
+
+        .btn-outline:hover {
+            background: rgba(0, 255, 0, 0.15);
+            color: #0f0;
+        }
+
+        /* Status */
+        .status-badge {
+            margin-top: 14px;
+            padding: 10px 16px;
+            border-radius: 12px;
+            display: none;
+            font-size: 0.75rem;
+            text-align: center;
+            font-family: monospace;
+        }
+
+        .status-badge.show {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .status-badge.success {
+            background: rgba(0, 255, 0, 0.1);
+            border: 1px solid #0f0;
+            color: #2a8;
+        }
+
+        .status-badge.error {
+            background: rgba(255, 0, 0, 0.1);
+            border: 1px solid #f00;
+            color: #f88;
+        }
+
+        .status-badge.loading {
+            background: rgba(0, 255, 0, 0.1);
+            border: 1px solid #ff0;
+            color: #ff0;
+        }
+
+        /* VM List Grid */
+        .vm-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            max-height: 60vh;
+            overflow-y: auto;
+            padding-right: 6px;
+        }
+
+        .vm-grid::-webkit-scrollbar {
+            width: 5px;
+        }
+
+        .vm-grid::-webkit-scrollbar-track {
+            background: rgba(0, 255, 0, 0.1);
+            border-radius: 10px;
+        }
+
+        .vm-grid::-webkit-scrollbar-thumb {
+            background: #0f0;
+            border-radius: 10px;
+        }
+
+        /* VM Box - kiểu hacker */
+        .vm-box {
+            background: rgba(0, 15, 0, 0.8);
+            border-radius: 20px;
+            padding: 18px 22px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 1px solid rgba(0, 255, 0, 0.3);
+        }
+
+        .vm-box:hover {
+            transform: translateX(6px);
+            border-color: #0f0;
+            box-shadow: 0 0 12px rgba(0, 255, 0, 0.2);
+        }
+
+        .vm-box.active {
+            border-color: #0f0;
+            background: rgba(0, 30, 0, 0.9);
+            box-shadow: 0 0 0 2px rgba(0, 255, 0, 0.3);
+        }
+
+        .vm-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            margin-bottom: 10px;
+        }
+
+        .vm-name {
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: #0f0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .vm-timer {
+            font-family: 'JetBrains Mono', monospace;
+            background: rgba(0, 0, 0, 0.6);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #ff0;
+        }
+
+        .vm-preview {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            font-size: 0.7rem;
+            color: #2a8;
+            margin-bottom: 6px;
+        }
+
+        .vm-details {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s;
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 16px;
+            margin-top: 0;
+        }
+
+        .vm-box.expanded .vm-details {
+            max-height: 260px;
+            margin-top: 14px;
+            padding: 14px;
+        }
+
+        .detail-row {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 14px;
+            margin-bottom: 8px;
+        }
+
+        .detail-row span {
+            color: #0f0;
+        }
+
+        .vm-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 12px;
+        }
+
+        .btn-sm {
+            background: rgba(0, 255, 0, 0.15);
+            border: 0.5px solid #0f0;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.65rem;
+            font-weight: 500;
+            width: auto;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-sm:hover {
+            background: rgba(0, 255, 0, 0.3);
+        }
+
+        .btn-sm-danger {
+            background: rgba(255, 0, 0, 0.15);
+            border-color: #f00;
+            color: #f88;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 50px 24px;
+            color: #2a8;
+            background: rgba(0, 15, 0, 0.5);
+            border-radius: 24px;
+            border: 1px dashed #0f0;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+            border-top: 1px solid rgba(0, 255, 0, 0.2);
+        }
+
+        footer p {
+            color: #2a8;
+            font-size: 0.75rem;
+        }
+
+        footer a {
+            color: #0f0;
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 900px) {
+            body {
+                padding: 16px;
+            }
+            .dashboard {
+                flex-direction: column;
+            }
+            .header h1 {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>🚀 VM GENERATOR 🚀</h1>
+        <p>Hacker Green Edition · Matrix Style · GitHub Actions</p>
+    </div>
+
+    <!-- Tab chuyển đổi 2 site -->
+    <div class="tab-bar">
+        <button class="tab-btn active" onclick="switchTab('create')">✨ TẠO VM</button>
+        <button class="tab-btn" onclick="switchTab('manage')">📡 QUẢN LÝ VM</button>
+    </div>
+
+    <!-- SITE 1: TẠO VM -->
+    <div id="createTab" class="tab-content active">
+        <div class="dashboard">
+            <div class="panel-left">
+                <div class="card">
+                    <div class="card-title">
+                        <span>🔐</span> GITHUB TOKEN
+                    </div>
+                    <div class="form-group">
+                        <label>🔑 TOKEN</label>
+                        <div class="input-wrapper">
+                            <input type="password" id="github_token" placeholder="ghp_xxxxxxxxxxxx hoặc github_pat_xxxx">
+                        </div>
+                    </div>
+                    <button onclick="setupAndDeploy()" id="setupBtn">🚀 TẠO REPO + DEPLOY</button>
+                    <div id="setupStatus" class="status-badge"></div>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">
+                        <span>⚙️</span> CẤU HÌNH VM
+                    </div>
+                    <div class="form-group">
+                        <label>⏱️ THỜI GIAN SỐNG</label>
+                        <select id="duration">
+                            <option value="60">1 GIỜ</option>
+                            <option value="120" selected>2 GIỜ</option>
+                            <option value="240">4 GIỜ</option>
+                            <option value="330">5.5 GIỜ</option>
+                            <option value="360">6 GIỜ</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>💿 HỆ ĐIỀU HÀNH</label>
+                        <select id="target_os">
+                            <option value="windows">🪟 WINDOWS SERVER (GUI + noVNC)</option>
+                            <option value="ubuntu">🐧 UBUNTU 22.04 (SSH)</option>
+                        </select>
+                    </div>
+                    <button onclick="createVM()" id="deployBtn">💨 TẠO VPS NGAY</button>
+                    <div id="deployStatus" class="status-badge"></div>
+                </div>
+            </div>
+
+            <div class="panel-right">
+                <div class="card">
+                    <div class="card-title">
+                        <span>📡</span> DANH SÁCH VPS ĐANG CHẠY
+                    </div>
+                    <div id="vmListCreate" class="vm-grid">
+                        <div class="empty-state">
+                            ✨ CHƯA CÓ VPS NÀO<br>
+                            NHẤN "TẠO REPO + DEPLOY" ĐỂ BẮT ĐẦU
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SITE 2: QUẢN LÝ VM -->
+    <div id="manageTab" class="tab-content">
+        <div class="dashboard">
+            <div class="panel-left">
+                <div class="card">
+                    <div class="card-title">
+                        <span>🔄</span> QUẢN LÝ VPS
+                    </div>
+                    <button onclick="refreshVMList()" class="btn-outline" id="refreshBtn" style="margin-bottom: 16px;">🔄 LÀM MỚI DANH SÁCH</button>
+                    <button onclick="clearAllVMs()" class="btn-outline" style="background: rgba(255,0,0,0.1); border-color: #f00; color: #f88;">🗑️ XÓA TẤT CẢ VPS</button>
+                    <div id="manageStatus" class="status-badge"></div>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">
+                        <span>📊</span> THỐNG KÊ
+                    </div>
+                    <div id="stats" style="color: #0f0; font-family: monospace; font-size: 0.8rem;">
+                        Đang tải...
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel-right">
+                <div class="card">
+                    <div class="card-title">
+                        <span>📡</span> DANH SÁCH VPS ĐANG HOẠT ĐỘNG
+                    </div>
+                    <div id="vmListManage" class="vm-grid">
+                        <div class="empty-state">
+                            ✨ CHƯA CÓ VPS NÀO
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>Developed by <strong style="color:#0f0;">TDz888</strong> | Contact: <a href="mailto:thienantran1268@gmail.com">thienantran1268@gmail.com</a></p>
+        <p style="font-size: 0.65rem; margin-top: 8px;">Based on DuckNoVis Technology · Matrix Green Edition</p>
+    </footer>
+</div>
+
+<script>
+    // ======================= CONFIG =======================
+    const API_BASE = '/api';
+    let vmDatabase = [];
+    let activeVMId = null;
+
+    // ======================= TAB SWITCH =======================
+    function switchTab(tab) {
+        const createTab = document.getElementById('createTab');
+        const manageTab = document.getElementById('manageTab');
+        const btns = document.querySelectorAll('.tab-btn');
+        
+        btns.forEach(btn => btn.classList.remove('active'));
+        
+        if (tab === 'create') {
+            createTab.classList.add('active');
+            manageTab.classList.remove('active');
+            btns[0].classList.add('active');
+            renderVMList(); // refresh
+        } else {
+            createTab.classList.remove('active');
+            manageTab.classList.add('active');
+            btns[1].classList.add('active');
+            updateStats();
+            renderVMList();
+        }
+    }
+
+    // ======================= UTILS =======================
+    function showStatus(elementId, msg, type) {
+        const el = document.getElementById(elementId);
+        if (!el) return;
+        el.className = `status-badge show ${type}`;
+        el.innerHTML = msg;
+        setTimeout(() => el.classList.remove('show'), 5000);
+    }
+
+    async function callApi(endpoint, data) {
+        try {
+            const res = await fetch(`${API_BASE}/${endpoint}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+            return await res.json();
+        } catch (err) {
+            return { error: err.message };
+        }
+    }
+
+    function refreshVMList() {
+        renderVMList();
+        updateStats();
+        showStatus('manageStatus', 'Đã làm mới danh sách', 'success');
+    }
+
+    function clearAllVMs() {
+        if (confirm('⚠️ Bạn có chắc chắn muốn xóa TẤT CẢ VPS?')) {
+            vmDatabase = [];
+            activeVMId = null;
+            saveVMToLocal();
+            renderVMList();
+            updateStats();
+            showStatus('manageStatus', 'Đã xóa tất cả VPS', 'success');
+        }
+    }
+
+    function updateStats() {
+        const statsDiv = document.getElementById('stats');
+        if (statsDiv) {
+            const total = vmDatabase.length;
+            const active = vmDatabase.filter(v => getRemainingSec(v) > 0).length;
+            statsDiv.innerHTML = `
+                📊 TỔNG SỐ VPS: ${total}<br>
+                🟢 ĐANG HOẠT ĐỘNG: ${active}<br>
+                ⏰ ĐÃ HẾT HẠN: ${total - active}
+            `;
+        }
+    }
+
+    // ======================= GITHUB API =======================
+    async function setupAndDeploy() {
+        const token = document.getElementById('github_token').value.trim();
+        if (!token) {
+            alert('Vui lòng nhập GitHub Token');
+            return;
+        }
+
+        showStatus('setupStatus', '🔄 Đang kiểm tra token và tạo repo...', 'loading');
+        document.getElementById('setupBtn').disabled = true;
+
+        try {
+            const result = await callApi('create-repo', { token });
+            if (result.error) throw new Error(result.error);
+            
+            localStorage.setItem('gh_token', token);
+            localStorage.setItem('gh_owner', result.owner);
+            localStorage.setItem('gh_repo', result.repo);
+            
+            showStatus('setupStatus', `✅ Thành công! Repo: ${result.repo}`, 'success');
+            setTimeout(() => createVM(), 1000);
+            
+        } catch (err) {
+            showStatus('setupStatus', `❌ Lỗi: ${err.message}`, 'error');
+        } finally {
+            document.getElementById('setupBtn').disabled = false;
+        }
+    }
+
+    async function createVM() {
+        let token = localStorage.getItem('gh_token');
+        let owner = localStorage.getItem('gh_owner');
+        let repo = localStorage.getItem('gh_repo');
+        
+        if (!token || !owner || !repo) {
+            const freshToken = document.getElementById('github_token').value.trim();
+            if (!freshToken) {
+                alert('Cần nhập GitHub Token và chạy "Tạo Repo + Deploy" trước');
+                return;
+            }
+            await setupAndDeploy();
+            return;
+        }
+        
+        const duration = document.getElementById('duration').value;
+        const target_os = document.getElementById('target_os').value;
+        
+        showStatus('deployStatus', '🚀 Đang gửi yêu cầu tạo VPS...', 'loading');
+        document.getElementById('deployBtn').disabled = true;
+        
+        try {
+            const result = await callApi('deploy-vm', {
+                token, owner, repo, duration, target_os, tailscale_token: ''
+            });
+            if (result.error) throw new Error(result.error);
+            
+            const osName = target_os === 'windows' ? 'Windows Server' : 'Ubuntu 22.04';
+            addVM({
+                name: osName,
+                ip: 'Đang khởi tạo...',
+                user: 'Đang khởi tạo...',
+                pass: 'Đang khởi tạo...',
+                duration: parseInt(duration)
+            });
+            
+            showStatus('deployStatus', '✅ VPS đang được tạo (2-3 phút sau có thông tin)', 'success');
+            if (document.getElementById('manageTab').classList.contains('active')) {
+                updateStats();
+            }
+            
+        } catch (err) {
+            showStatus('deployStatus', `❌ Lỗi: ${err.message}`, 'error');
+        } finally {
+            document.getElementById('deployBtn').disabled = false;
+        }
+    }
+
+    // ======================= VM MANAGEMENT =======================
+    function addVM(vm) {
+        const newVM = {
+            id: Date.now() + '_' + Math.random().toString(36).substr(2, 6),
+            name: vm.name,
+            ip: vm.ip,
+            user: vm.user,
+            password: vm.pass,
+            durationMinutes: vm.duration,
+            createdAt: Date.now(),
+            expanded: false
+        };
+        vmDatabase.push(newVM);
+        saveVMToLocal();
+        renderVMList();
+        startTimerForVM(newVM.id);
+    }
+
+    function removeVM(id) {
+        vmDatabase = vmDatabase.filter(v => v.id !== id);
+        if (activeVMId === id) activeVMId = null;
+        saveVMToLocal();
+        renderVMList();
+        updateStats();
+    }
+
+    function toggleExpand(id) {
+        const vm = vmDatabase.find(v => v.id === id);
+        if (vm) {
+            vm.expanded = !vm.expanded;
+            if (vm.expanded) activeVMId = id;
+            else if (activeVMId === id) activeVMId = null;
+            renderVMList();
+        }
+    }
+
+    function getRemainingSec(vm) {
+        const elapsed = (Date.now() - vm.createdAt) / 1000;
+        const remain = vm.durationMinutes * 60 - elapsed;
+        return remain > 0 ? remain : 0;
+    }
+
+    function formatTime(sec) {
+        if (sec <= 0) return 'HẾT HẠN';
+        const h = Math.floor(sec / 3600);
+        const m = Math.floor((sec % 3600) / 60);
+        const s = Math.floor(sec % 60);
+        if (h > 0) return `${h}H ${m}M ${s}S`;
+        if (m > 0) return `${m}M ${s}S`;
+        return `${s}S`;
+    }
+
+    function formatDate(timestamp) {
+        const d = new Date(timestamp);
+        return d.toLocaleString('vi-VN');
+    }
+
+    function updateTimerUI(id) {
+        const vm = vmDatabase.find(v => v.id === id);
+        if (!vm) return;
+        const remain = getRemainingSec(vm);
+        const timerEl = document.getElementById(`timer-${id}`);
+        if (timerEl) {
+            if (remain <= 0) {
+                timerEl.innerHTML = 'HẾT HẠN';
+                setTimeout(() => removeVM(id), 2000);
+            } else {
+                timerEl.innerHTML = formatTime(remain);
+            }
+        }
+    }
+
+    function startTimerForVM(id) {
+        setInterval(() => updateTimerUI(id), 1000);
+    }
+
+    function saveVMToLocal() {
+        const toStore = vmDatabase.map(v => ({
+            id: v.id, name: v.name, ip: v.ip, user: v.user, password: v.password,
+            durationMinutes: v.durationMinutes, createdAt: v.createdAt, expanded: false
+        }));
+        localStorage.setItem('vmgenerator_vms', JSON.stringify(toStore));
+    }
+
+    function loadVMFromLocal() {
+        const stored = localStorage.getItem('vmgenerator_vms');
+        if (stored) {
+            try {
+                vmDatabase = JSON.parse(stored);
+                vmDatabase.forEach(v => { v.expanded = false; });
+                renderVMList();
+                vmDatabase.forEach(v => startTimerForVM(v.id));
+            } catch(e) { vmDatabase = []; }
+        }
+    }
+
+    function renderVMList() {
+        const containerCreate = document.getElementById('vmListCreate');
+        const containerManage = document.getElementById('vmListManage');
+        
+        if (vmDatabase.length === 0) {
+            const emptyHtml = '<div class="empty-state">✨ CHƯA CÓ VPS NÀO<br>NHẤN "TẠO REPO + DEPLOY" ĐỂ BẮT ĐẦU</div>';
+            if (containerCreate) containerCreate.innerHTML = emptyHtml;
+            if (containerManage) containerManage.innerHTML = '<div class="empty-state">✨ CHƯA CÓ VPS NÀO</div>';
+            return;
+        }
+        
+        let html = '';
+        for (let vm of vmDatabase) {
+            const isWin = vm.name.includes('Windows');
+            const expandedClass = vm.expanded ? 'expanded' : '';
+            const isActive = (activeVMId === vm.id);
+            
+            html += `
+                <div class="vm-box ${expandedClass} ${isActive ? 'active' : ''}" onclick="toggleExpand('${vm.id}')">
+                    <div class="vm-header">
+                        <div class="vm-name">
+                            <span>${isWin ? '🪟' : '🐧'}</span> ${escapeHtml(vm.name)}
+                        </div>
+                        <div class="vm-timer" id="timer-${vm.id}">${formatTime(getRemainingSec(vm))}</div>
+                    </div>
+                    <div class="vm-preview">
+                        <span>🌍 IP: ${escapeHtml(vm.ip)}</span>
+                        <span>👤 USER: ${escapeHtml(vm.user)}</span>
+                    </div>
+                    <div class="vm-details">
+                        <div class="detail-row">
+                            <div>🔗 IP: <span>${escapeHtml(vm.ip)}</span></div>
+                            <div>🔌 PORT: <span>${isWin ? '3389 (RDP) / 6080 (noVNC)' : '22 (SSH)'}</span></div>
+                        </div>
+                        <div class="detail-row">
+                            <div>👤 USERNAME: <span>${escapeHtml(vm.user)}</span></div>
+                            <div>🔑 PASSWORD: <span>${escapeHtml(vm.password)}</span></div>
+                        </div>
+                        <div class="detail-row">
+                            <div>⏰ THỜI GIAN TẠO: <span>${formatDate(vm.createdAt)}</span></div>
+                            <div>⏱️ HẾT HẠN SAU: <span>${formatTime(getRemainingSec(vm))}</span></div>
+                        </div>
+                        <div class="vm-actions">
+                            <button class="btn-sm" onclick="event.stopPropagation(); copyInfo('${vm.id}')">📋 COPY INFO</button>
+                            <button class="btn-sm btn-sm-danger" onclick="event.stopPropagation(); removeVM('${vm.id}')">🗑️ XÓA VPS</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+        
+        if (containerCreate) containerCreate.innerHTML = html;
+        if (containerManage) containerManage.innerHTML = html;
+        vmDatabase.forEach(vm => updateTimerUI(vm.id));
+    }
+
+    function copyInfo(id) {
+        const vm = vmDatabase.find(v => v.id === id);
+        if (!vm) return;
+        const info = `IP: ${vm.ip}\nUser: ${vm.user}\nPassword: ${vm.password}\nPort: ${vm.name.includes('Windows') ? '3389' : '22'}`;
+        navigator.clipboard.writeText(info);
+        showStatus('deployStatus', '📋 Đã copy thông tin kết nối', 'success');
+    }
+
+    function escapeHtml(str) {
+        if (!str) return '';
+        return str.replace(/[&<>]/g, function(m) {
+            if (m === '&') return '&amp;';
+            if (m === '<') return '&lt;';
+            if (m === '>') return '&gt;';
+            return m;
+        });
+    }
+
+    // ======================= INIT =======================
+    window.onload = () => {
+        loadVMFromLocal();
+        const savedToken = localStorage.getItem('gh_token');
+        if (savedToken) document.getElementById('github_token').value = savedToken;
+        
+        setInterval(() => {
+            for (let vm of vmDatabase) {
+                if (getRemainingSec(vm) <= 0) removeVM(vm.id);
+            }
+            updateStats();
+        }, 5000);
+    };
+
+    window.switchTab = switchTab;
+    window.setupAndDeploy = setupAndDeploy;
+    window.createVM = createVM;
+    window.removeVM = removeVM;
+    window.toggleExpand = toggleExpand;
+    window.refreshVMList = refreshVMList;
+    window.clearAllVMs = clearAllVMs;
+    window.copyInfo = copyInfo;
+</script>
+</body>
+</html>
