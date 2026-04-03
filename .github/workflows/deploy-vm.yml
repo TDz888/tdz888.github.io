@@ -1,4 +1,4 @@
-name: VPS Glass Deploy
+name: VPS Generator Deploy
 
 on:
   workflow_dispatch:
@@ -11,9 +11,6 @@ on:
         description: 'He dieu hanh'
         required: true
         default: 'windows'
-      tailscale_token:
-        description: 'Tailscale Auth Key'
-        required: false
 
 jobs:
   windows:
@@ -25,28 +22,22 @@ jobs:
         run: |
           Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server' -Name "fDenyTSConnections" -Value 0 -Force
           netsh advfirewall firewall add rule name="RDP" dir=in action=allow protocol=TCP localport=3389
-      - name: Install Tailscale
-        if: github.event.inputs.tailscale_token != ''
-        run: |
-          choco install tailscale -y
-          tailscale login --auth-key ${{ github.event.inputs.tailscale_token }}
-          tailscale up
       - name: Create User
         run: |
-          $user = "glass_" + (Get-Random -Minimum 1000 -Maximum 9999)
+          $user = "vps_" + (Get-Random -Minimum 1000 -Maximum 9999)
           $pass = -join (((65..90) + (97..122) + (48..57)) | Get-Random -Count 14 | ForEach-Object {[char]$_})
           net user $user $pass /add
           net localgroup Administrators $user /add
           echo "VM_USER=$user" >> $env:GITHUB_ENV
           echo "VM_PASS=$pass" >> $env:GITHUB_ENV
-      - name: Get Public IP
+      - name: Get IP
         run: |
           $ip = (Invoke-WebRequest -Uri https://api.ipify.org -UseBasicParsing).Content
           echo "PUBLIC_IP=$ip" >> $env:GITHUB_ENV
-      - name: Show Connection Info
+      - name: Show Info
         run: |
           Write-Host "========================================="
-          Write-Host "VM READY - WINDOWS"
+          Write-Host "VPS READY - WINDOWS"
           Write-Host "IP: $env:PUBLIC_IP"
           Write-Host "User: $env:VM_USER"
           Write-Host "Password: $env:VM_PASS"
@@ -58,7 +49,7 @@ jobs:
           $end = (Get-Date).AddMinutes($dur)
           while ((Get-Date) -lt $end) {
             $remain = [math]::Round(($end - (Get-Date)).TotalMinutes)
-            Write-Host "Con $remain phut - VM dang hoat dong"
+            Write-Host "Con $remain phut - VPS dang hoat dong"
             Start-Sleep -Seconds 60
           }
 
@@ -73,29 +64,23 @@ jobs:
           sudo apt install -y -qq openssh-server curl
           sudo systemctl enable ssh
           sudo systemctl start ssh
-      - name: Install Tailscale
-        if: github.event.inputs.tailscale_token != ''
-        run: |
-          curl -fsSL https://tailscale.com/install.sh | sh
-          sudo tailscale login --auth-key ${{ github.event.inputs.tailscale_token }}
-          sudo tailscale up
       - name: Create User
         run: |
-          USER="glass_$((RANDOM % 9000 + 1000))"
+          USER="vps_$((RANDOM % 9000 + 1000))"
           PASS=$(openssl rand -base64 14 | tr -d '=+/' | cut -c1-14)
           sudo useradd -m -s /bin/bash "$USER"
           echo "$USER:$PASS" | sudo chpasswd
           sudo usermod -aG sudo "$USER"
           echo "VM_USER=$USER" >> $GITHUB_ENV
           echo "VM_PASS=$PASS" >> $GITHUB_ENV
-      - name: Get Public IP
+      - name: Get IP
         run: |
           IP=$(curl -s https://api.ipify.org)
           echo "PUBLIC_IP=$IP" >> $GITHUB_ENV
-      - name: Show Connection Info
+      - name: Show Info
         run: |
           echo "========================================="
-          echo "VM READY - UBUNTU"
+          echo "VPS READY - UBUNTU"
           echo "IP: $PUBLIC_IP"
           echo "User: $VM_USER"
           echo "Password: $VM_PASS"
@@ -107,6 +92,6 @@ jobs:
           END=$(($(date +%s) + DUR * 60))
           while [ $(date +%s) -lt $END ]; do
             REMAIN=$(( ($END - $(date +%s)) / 60 ))
-            echo "Con $REMAIN phut - VM dang hoat dong"
+            echo "Con $REMAIN phut - VPS dang hoat dong"
             sleep 60
           done
