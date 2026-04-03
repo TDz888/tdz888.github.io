@@ -5,8 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>VPS Glass · noVNC + Tailscale · iOS 26 Liquid</title>
     <style>
-        /* (Toàn bộ CSS giống như tôi đã viết ở phần trước - giao diện glass, hiệu ứng bồng bềnh) */
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
             min-height: 100vh;
             background: radial-gradient(ellipse at 30% 20%, #0f1422, #05070d);
@@ -15,101 +19,717 @@
             position: relative;
             overflow-x: hidden;
         }
-        /* ... (copy toàn bộ CSS từ câu trả lời trước của tôi) ... */
-        /* Lưu ý: Tôi sẽ gửi lại file HTML hoàn chỉnh qua chat nếu bạn cần, nhưng trong hướng dẫn này tôi tập trung vào backend */
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: -30%;
+            left: -20%;
+            width: 150%;
+            height: 150%;
+            background: radial-gradient(circle at 30% 40%, rgba(80, 140, 255, 0.12), transparent 65%);
+            pointer-events: none;
+            animation: floatLiquid 20s ease-in-out infinite;
+            z-index: 0;
+        }
+
+        body::after {
+            content: '';
+            position: fixed;
+            bottom: -20%;
+            right: -20%;
+            width: 130%;
+            height: 130%;
+            background: radial-gradient(circle at 70% 80%, rgba(160, 100, 255, 0.1), transparent 70%);
+            pointer-events: none;
+            animation: floatLiquid2 25s ease-in-out infinite;
+            z-index: 0;
+        }
+
+        @keyframes floatLiquid {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(3%, 2%) scale(1.03); }
+        }
+
+        @keyframes floatLiquid2 {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(-2%, -3%) scale(1.04); }
+        }
+
+        .container {
+            max-width: 1500px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 2;
+        }
+
+        .glass-header {
+            text-align: center;
+            margin-bottom: 30px;
+            backdrop-filter: blur(24px);
+            background: rgba(20, 28, 48, 0.35);
+            border-radius: 70px;
+            padding: 20px;
+            border: 0.5px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .glass-header h1 {
+            font-size: 2.5rem;
+            background: linear-gradient(135deg, #F5F9FF, #7AB0FF);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+
+        .glass-header p {
+            color: rgba(200, 215, 250, 0.7);
+            font-size: 0.85rem;
+        }
+
+        .dashboard {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .panel-config {
+            flex: 1;
+            min-width: 280px;
+        }
+
+        .panel-vms {
+            flex: 1.2;
+            min-width: 320px;
+        }
+
+        .panel-novnc {
+            flex: 1.5;
+            min-width: 400px;
+        }
+
+        .glass-card {
+            background: rgba(18, 26, 46, 0.5);
+            backdrop-filter: blur(28px);
+            border-radius: 40px;
+            border: 0.8px solid rgba(255, 255, 255, 0.15);
+            padding: 24px;
+            margin-bottom: 20px;
+            transition: all 0.3s;
+        }
+
+        .glass-card:hover {
+            background: rgba(28, 38, 60, 0.6);
+            border-color: rgba(255, 255, 255, 0.25);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 22px;
+        }
+
+        .icon-bg {
+            width: 44px;
+            height: 44px;
+            background: linear-gradient(145deg, #2C6EFF, #1A4FCC);
+            border-radius: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+        }
+
+        .card-header h2 {
+            font-size: 1.4rem;
+            color: #EEF3FF;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        label {
+            display: block;
+            color: #B8CCFF;
+            font-size: 0.8rem;
+            margin-bottom: 6px;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px 18px;
+            background: rgba(6, 12, 24, 0.8);
+            border: 1px solid rgba(100, 140, 220, 0.5);
+            border-radius: 36px;
+            font-size: 0.9rem;
+            color: white;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: #5E9CFF;
+        }
+
+        button {
+            background: linear-gradient(105deg, #2C6EFF, #1A4FCC);
+            border: none;
+            padding: 12px 20px;
+            border-radius: 44px;
+            font-weight: 600;
+            color: white;
+            width: 100%;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        button:active {
+            transform: scale(0.97);
+        }
+
+        button:disabled {
+            opacity: 0.5;
+        }
+
+        .status-badge {
+            margin-top: 12px;
+            padding: 10px;
+            border-radius: 32px;
+            display: none;
+            font-size: 0.75rem;
+            text-align: center;
+        }
+
+        .status-badge.show {
+            display: block;
+        }
+
+        .status-badge.success {
+            background: rgba(60, 200, 120, 0.2);
+            border: 0.5px solid #80EEA0;
+            color: #C0FFE0;
+        }
+
+        .status-badge.error {
+            background: rgba(255, 70, 90, 0.18);
+            border: 0.5px solid #FF7070;
+            color: #FFC0C0;
+        }
+
+        .status-badge.loading {
+            background: rgba(255, 180, 60, 0.15);
+            border: 0.5px solid #FFB347;
+            color: #FFE2B5;
+        }
+
+        .vm-scroll {
+            max-height: 55vh;
+            overflow-y: auto;
+            padding-right: 5px;
+        }
+
+        .vm-scroll::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .vm-scroll::-webkit-scrollbar-thumb {
+            background: #5E9CFF;
+            border-radius: 10px;
+        }
+
+        .vm-item {
+            background: rgba(10, 16, 30, 0.7);
+            border-radius: 28px;
+            padding: 14px 18px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            border: 0.5px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.2s;
+        }
+
+        .vm-item:hover {
+            background: rgba(20, 30, 50, 0.8);
+            border-color: #5E9CFF;
+        }
+
+        .vm-item.active {
+            border-color: #2C6EFF;
+            background: rgba(44, 110, 255, 0.15);
+        }
+
+        .vm-name {
+            font-weight: 600;
+            font-size: 1rem;
+            color: #D0E6FF;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .vm-timer {
+            font-family: monospace;
+            font-size: 0.7rem;
+            color: #FFE5A3;
+        }
+
+        .vm-info {
+            font-size: 0.7rem;
+            color: #8A9FD0;
+            margin-top: 6px;
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .btn-connect {
+            background: rgba(44, 110, 255, 0.3);
+            border: 0.5px solid #5E9CFF;
+            padding: 6px 12px;
+            border-radius: 30px;
+            font-size: 0.7rem;
+            width: auto;
+            margin-top: 8px;
+        }
+
+        .novnc-container {
+            background: #000;
+            border-radius: 28px;
+            overflow: hidden;
+            aspect-ratio: 16 / 9;
+            margin-top: 12px;
+        }
+
+        .novnc-container iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .connect-guide {
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 24px;
+            padding: 16px;
+            margin-top: 16px;
+            font-size: 0.75rem;
+            color: #A0B5E0;
+        }
+
+        .tailscale-status {
+            font-size: 0.7rem;
+            color: #7AB0FF;
+            margin-top: 8px;
+        }
+
+        footer {
+            text-align: center;
+            color: #5A6E96;
+            font-size: 0.7rem;
+            margin-top: 30px;
+        }
+
+        @media (max-width: 1000px) {
+            .dashboard {
+                flex-direction: column;
+            }
+        }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="glass-header">
-            <h1>🧊 VPS GLASS · iOS 26 Liquid</h1>
-            <p>noVNC · Tailscale · RDP · Bồng bềnh như mây</p>
-        </div>
-        <div class="dashboard">
-            <!-- Cột trái: Cấu hình -->
-            <div class="panel-config">
-                <div class="glass-card">
-                    <div class="card-header"><div class="icon-bg">🔐</div><h2>GitHub Token</h2></div>
-                    <input type="password" id="github_token" placeholder="ghp_xxx hoặc github_pat_xxx">
-                    <button onclick="setupAndDeploy()" id="setupBtn">✨ Tạo repo + Deploy</button>
-                    <div id="setupStatus" class="status-badge"></div>
-                </div>
-                <div class="glass-card">
-                    <div class="card-header"><div class="icon-bg">⚙️</div><h2>Tạo VM mới</h2></div>
-                    <div class="form-group"><label>⏱️ Thời gian sống</label><select id="duration"><option value="60">1 giờ</option><option value="120" selected>2 giờ</option><option value="240">4 giờ</option><option value="360">6 giờ</option></select></div>
-                    <div class="form-group"><label>💿 Hệ điều hành</label><select id="target_os"><option value="windows">🪟 Windows 11 (RDP)</option><option value="ubuntu">🐧 Ubuntu 22.04 (SSH)</option></select></div>
-                    <button onclick="createVM()" id="deployBtn">💨 Tạo VM ngay</button>
-                    <div id="deployStatus" class="status-badge"></div>
-                </div>
-                <div class="glass-card">
-                    <div class="card-header"><div class="icon-bg">🔗</div><h2>Tailscale (RDP/SSH)</h2></div>
-                    <input type="password" id="tailscale_token" placeholder="tskey-auth-xxx">
-                    <button onclick="saveTailscaleToken()">💾 Lưu token</button>
-                    <div class="tailscale-status" id="tailscaleStatus"></div>
-                </div>
-            </div>
-            <!-- Cột giữa: Danh sách VM -->
-            <div class="panel-vms">
-                <div class="glass-card">
-                    <div class="card-header"><div class="icon-bg">🖥️</div><h2>Máy chủ đang chạy</h2></div>
-                    <div id="vmList" class="vm-scroll">✨ Chưa có VM nào</div>
-                </div>
-            </div>
-            <!-- Cột phải: noVNC -->
-            <div class="panel-novnc">
-                <div class="glass-card">
-                    <div class="card-header"><div class="icon-bg">🖥️</div><h2>noVNC · Xem màn hình</h2></div>
-                    <div class="novnc-container" id="novncContainer">⚡ Chọn VM để kết nối</div>
-                    <div class="connect-guide" id="rdpGuide" style="display:none;"></div>
-                </div>
-            </div>
-        </div>
-        <footer>Liquid Glass Engine · noVNC + Tailscale · GitHub Actions</footer>
+<div class="container">
+    <div class="glass-header">
+        <h1>🧊 VPS GLASS · iOS 26 Liquid</h1>
+        <p>noVNC · Tailscale · RDP · Bồng bềnh như mây</p>
     </div>
 
-    <script>
-        // Frontend JavaScript gọi đến API backend của chính nó
-        const API_BASE = '/api'; // Vercel Serverless Functions
+    <div class="dashboard">
+        <div class="panel-config">
+            <div class="glass-card">
+                <div class="card-header">
+                    <div class="icon-bg">🔐</div>
+                    <h2>GitHub Token</h2>
+                </div>
+                <input type="password" id="github_token" placeholder="ghp_xxx hoặc github_pat_xxx">
+                <button onclick="setupAndDeploy()" id="setupBtn" style="margin-top: 16px;">✨ Tạo repo + Deploy</button>
+                <div id="setupStatus" class="status-badge"></div>
+            </div>
 
-        async function callApi(endpoint, data) {
-            const res = await fetch(`${API_BASE}/${endpoint}`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(data)
+            <div class="glass-card">
+                <div class="card-header">
+                    <div class="icon-bg">⚙️</div>
+                    <h2>Tạo VM mới</h2>
+                </div>
+                <div class="form-group">
+                    <label>⏱️ Thời gian sống</label>
+                    <select id="duration">
+                        <option value="60">1 giờ</option>
+                        <option value="120" selected>2 giờ</option>
+                        <option value="240">4 giờ</option>
+                        <option value="360">6 giờ</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>💿 Hệ điều hành</label>
+                    <select id="target_os">
+                        <option value="windows">🪟 Windows 11 (RDP)</option>
+                        <option value="ubuntu">🐧 Ubuntu 22.04 (SSH)</option>
+                    </select>
+                </div>
+                <button onclick="createVM()" id="deployBtn">💨 Tạo VM ngay</button>
+                <div id="deployStatus" class="status-badge"></div>
+            </div>
+
+            <div class="glass-card">
+                <div class="card-header">
+                    <div class="icon-bg">🔗</div>
+                    <h2>Tailscale (RDP/SSH)</h2>
+                </div>
+                <input type="password" id="tailscale_token" placeholder="tskey-auth-xxx">
+                <button onclick="saveTailscaleToken()" style="margin-top: 12px;">💾 Lưu token</button>
+                <div class="tailscale-status" id="tailscaleStatus"></div>
+                <div class="connect-guide">
+                    📌 <strong>Cách lấy Tailscale token:</strong><br>
+                    1. Đăng nhập <a href="https://login.tailscale.com" target="_blank" style="color:#7AB0FF;">tailscale.com</a><br>
+                    2. Vào Settings → Keys → Generate auth key<br>
+                    3. Copy key dạng <code>tskey-auth-xxx</code>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel-vms">
+            <div class="glass-card">
+                <div class="card-header">
+                    <div class="icon-bg">🖥️</div>
+                    <h2>Máy chủ đang chạy</h2>
+                </div>
+                <div id="vmList" class="vm-scroll">
+                    <div style="text-align:center; padding:40px; color:#8A9FD0;">✨ Chưa có VM nào</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel-novnc">
+            <div class="glass-card">
+                <div class="card-header">
+                    <div class="icon-bg">🖥️</div>
+                    <h2>noVNC · Xem màn hình</h2>
+                </div>
+                <div class="novnc-container" id="novncContainer">
+                    <div style="display:flex; align-items:center; justify-content:center; height:100%; background:#0a0e1a; color:#6c7a9e;">
+                        ⚡ Chọn một VM để kết nối noVNC
+                    </div>
+                </div>
+                <div class="connect-guide" id="rdpGuide" style="display:none;"></div>
+            </div>
+        </div>
+    </div>
+    <footer>Liquid Glass Engine · noVNC + Tailscale · GitHub Actions</footer>
+</div>
+
+<script>
+    // ======================= CONFIGURATION =======================
+    const API_BASE = '/api';
+    let vmDatabase = [];
+    let activeVMId = null;
+
+    // ======================= UTILITY FUNCTIONS =======================
+    function showStatus(elementId, msg, type) {
+        const el = document.getElementById(elementId);
+        if (!el) return;
+        el.className = `status-badge show ${type}`;
+        el.innerHTML = msg;
+        setTimeout(() => el.classList.remove('show'), 5000);
+    }
+
+    async function callApi(endpoint, data) {
+        const res = await fetch(`${API_BASE}/${endpoint}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        });
+        return res.json();
+    }
+
+    function saveTailscaleToken() {
+        const token = document.getElementById('tailscale_token').value.trim();
+        if (token) {
+            localStorage.setItem('tailscale_token', token);
+            const statusDiv = document.getElementById('tailscaleStatus');
+            statusDiv.innerHTML = '✅ Đã lưu token Tailscale';
+            setTimeout(() => statusDiv.innerHTML = '', 3000);
+        } else {
+            alert('Vui lòng nhập Tailscale auth key');
+        }
+    }
+
+    // ======================= GITHUB API =======================
+    async function setupAndDeploy() {
+        const token = document.getElementById('github_token').value.trim();
+        if (!token) {
+            alert('Vui lòng nhập GitHub Token');
+            return;
+        }
+
+        showStatus('setupStatus', 'Đang kiểm tra token và tạo repo...', 'loading');
+        document.getElementById('setupBtn').disabled = true;
+
+        try {
+            const result = await callApi('create-repo', { token });
+            
+            if (result.error) throw new Error(result.error);
+            
+            localStorage.setItem('gh_token', token);
+            localStorage.setItem('gh_owner', result.owner);
+            localStorage.setItem('gh_repo', result.repo);
+            
+            showStatus('setupStatus', `✅ Thành công! Repo: ${result.repo}`, 'success');
+            
+            // Tự động tạo VM sau khi có repo
+            setTimeout(() => createVM(), 1000);
+            
+        } catch (err) {
+            showStatus('setupStatus', `❌ Lỗi: ${err.message}`, 'error');
+        } finally {
+            document.getElementById('setupBtn').disabled = false;
+        }
+    }
+
+    async function createVM() {
+        let token = localStorage.getItem('gh_token');
+        let owner = localStorage.getItem('gh_owner');
+        let repo = localStorage.getItem('gh_repo');
+        
+        if (!token || !owner || !repo) {
+            const freshToken = document.getElementById('github_token').value.trim();
+            if (!freshToken) {
+                alert('Cần nhập GitHub Token và chạy "Tạo repo + Deploy" trước');
+                return;
+            }
+            await setupAndDeploy();
+            return;
+        }
+        
+        const duration = document.getElementById('duration').value;
+        const target_os = document.getElementById('target_os').value;
+        const tailscale_token = localStorage.getItem('tailscale_token') || '';
+        
+        showStatus('deployStatus', '🚀 Đang gửi yêu cầu tạo VM...', 'loading');
+        document.getElementById('deployBtn').disabled = true;
+        
+        try {
+            const result = await callApi('deploy-vm', {
+                token, owner, repo, duration, target_os, tailscale_token
             });
-            return res.json();
+            
+            if (result.error) throw new Error(result.error);
+            
+            const osName = target_os === 'windows' ? 'Windows 11' : 'Ubuntu 22.04';
+            addVM({
+                name: osName,
+                ip: 'Đang khởi tạo...',
+                user: 'Đang khởi tạo...',
+                pass: 'Đang khởi tạo...',
+                duration: parseInt(duration)
+            });
+            
+            showStatus('deployStatus', '✅ VM đang được tạo (2-3 phút sau có thông tin)', 'success');
+            
+        } catch (err) {
+            showStatus('deployStatus', `❌ Lỗi: ${err.message}`, 'error');
+        } finally {
+            document.getElementById('deployBtn').disabled = false;
         }
+    }
 
-        async function setupAndDeploy() {
-            const token = document.getElementById('github_token').value.trim();
-            if (!token) return alert('Nhập GitHub Token');
-            showStatus('setupStatus', 'Đang tạo repo...', 'loading');
+    // ======================= VM MANAGEMENT =======================
+    function addVM(vm) {
+        const newVM = {
+            id: Date.now() + '_' + Math.random().toString(36).substr(2, 6),
+            name: vm.name,
+            ip: vm.ip,
+            user: vm.user,
+            password: vm.pass,
+            durationMinutes: vm.duration,
+            createdAt: Date.now(),
+            novncUrl: ''
+        };
+        vmDatabase.push(newVM);
+        saveVMToLocal();
+        renderVMList();
+        startTimerForVM(newVM.id);
+    }
+
+    function removeVM(id) {
+        vmDatabase = vmDatabase.filter(v => v.id !== id);
+        if (activeVMId === id) {
+            activeVMId = null;
+            document.getElementById('novncContainer').innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100%;background:#0a0e1a;color:#6c7a9e;">⚡ Chọn một VM để kết nối noVNC</div>';
+            document.getElementById('rdpGuide').style.display = 'none';
+        }
+        saveVMToLocal();
+        renderVMList();
+    }
+
+    function connectToVM(id) {
+        const vm = vmDatabase.find(v => v.id === id);
+        if (!vm) return;
+        activeVMId = id;
+        
+        const novncDiv = document.getElementById('novncContainer');
+        if (vm.novncUrl && vm.novncUrl !== '') {
+            novncDiv.innerHTML = `<iframe src="${vm.novncUrl}"></iframe>`;
+        } else {
+            novncDiv.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100%;background:#0a0e1a;color:#ffcc66;">⏳ Đang chờ thông tin noVNC từ VM...</div>';
+        }
+        
+        const guide = document.getElementById('rdpGuide');
+        if (vm.ip && vm.ip !== 'Đang khởi tạo...') {
+            guide.style.display = 'block';
+            const isWin = vm.name.includes('Windows');
+            guide.innerHTML = `🔌 <strong>Thông tin kết nối:</strong><br>
+            - IP: <code>${vm.ip}</code><br>
+            - Port: <code>${isWin ? '3389 (RDP)' : '22 (SSH)'}</code><br>
+            - User: <code>${vm.user}</code><br>
+            - Password: <code>${vm.password}</code><br>
+            ${localStorage.getItem('tailscale_token') ? '- Tailscale: Đã cài đặt, dùng IP Tailscale để kết nối an toàn' : ''}`;
+        } else {
+            guide.style.display = 'block';
+            guide.innerHTML = '⏳ Đang chờ VM khởi tạo... Thông tin sẽ cập nhật sau 2-3 phút.';
+        }
+        
+        renderVMList();
+    }
+
+    function updateVMInfo(id, ip, user, pass, novncUrl) {
+        const vm = vmDatabase.find(v => v.id === id);
+        if (vm) {
+            if (ip) vm.ip = ip;
+            if (user) vm.user = user;
+            if (pass) vm.password = pass;
+            if (novncUrl) vm.novncUrl = novncUrl;
+            saveVMToLocal();
+            renderVMList();
+            if (activeVMId === id) connectToVM(id);
+        }
+    }
+
+    function getRemainingSec(vm) {
+        const elapsed = (Date.now() - vm.createdAt) / 1000;
+        const remain = vm.durationMinutes * 60 - elapsed;
+        return remain > 0 ? remain : 0;
+    }
+
+    function formatTime(sec) {
+        if (sec <= 0) return 'Hết hạn';
+        const h = Math.floor(sec / 3600);
+        const m = Math.floor((sec % 3600) / 60);
+        const s = Math.floor(sec % 60);
+        if (h > 0) return `${h}h ${m}m`;
+        if (m > 0) return `${m}m ${s}s`;
+        return `${s}s`;
+    }
+
+    function updateTimerUI(id) {
+        const vm = vmDatabase.find(v => v.id === id);
+        if (!vm) return;
+        const remain = getRemainingSec(vm);
+        const timerEl = document.getElementById(`timer-${id}`);
+        if (timerEl) {
+            if (remain <= 0) {
+                timerEl.innerHTML = 'Hết hạn';
+                setTimeout(() => removeVM(id), 2000);
+            } else {
+                timerEl.innerHTML = formatTime(remain);
+            }
+        }
+    }
+
+    function startTimerForVM(id) {
+        setInterval(() => updateTimerUI(id), 1000);
+    }
+
+    function saveVMToLocal() {
+        const toStore = vmDatabase.map(v => ({
+            id: v.id, name: v.name, ip: v.ip, user: v.user, password: v.password,
+            durationMinutes: v.durationMinutes, createdAt: v.createdAt, novncUrl: v.novncUrl
+        }));
+        localStorage.setItem('vpsglass_vms', JSON.stringify(toStore));
+    }
+
+    function loadVMFromLocal() {
+        const stored = localStorage.getItem('vpsglass_vms');
+        if (stored) {
             try {
-                const result = await callApi('create-repo', { token });
-                if (result.error) throw new Error(result.error);
-                localStorage.setItem('gh_token', token);
-                localStorage.setItem('gh_owner', result.owner);
-                localStorage.setItem('gh_repo', result.repo);
-                showStatus('setupStatus', `✅ Thành công: ${result.repo}`, 'success');
-                await createVM(); // Tạo VM luôn sau khi có repo
-            } catch (err) {
-                showStatus('setupStatus', `❌ ${err.message}`, 'error');
+                vmDatabase = JSON.parse(stored);
+                renderVMList();
+                vmDatabase.forEach(v => startTimerForVM(v.id));
+            } catch(e) { vmDatabase = []; }
+        }
+    }
+
+    function renderVMList() {
+        const container = document.getElementById('vmList');
+        if (!container) return;
+        if (vmDatabase.length === 0) {
+            container.innerHTML = '<div style="text-align:center; padding:40px; color:#8A9FD0;">✨ Chưa có VM nào</div>';
+            return;
+        }
+        let html = '';
+        for (let vm of vmDatabase) {
+            const isActive = (activeVMId === vm.id);
+            const activeClass = isActive ? 'active' : '';
+            html += `
+                <div class="vm-item ${activeClass}" onclick="connectToVM('${vm.id}')">
+                    <div class="vm-name">
+                        <span>${vm.name === 'Windows 11' ? '🪟' : '🐧'} ${escapeHtml(vm.name)}</span>
+                        <span class="vm-timer" id="timer-${vm.id}">${formatTime(getRemainingSec(vm))}</span>
+                    </div>
+                    <div class="vm-info">
+                        <span>🌍 ${escapeHtml(vm.ip)}</span>
+                    </div>
+                    <div class="vm-info">
+                        <span>👤 ${escapeHtml(vm.user)}</span>
+                        <span>🔑 ${escapeHtml(vm.password)}</span>
+                    </div>
+                    <button class="btn-connect" onclick="event.stopPropagation(); connectToVM('${vm.id}')">🔌 Kết nối</button>
+                    <button class="btn-connect" onclick="event.stopPropagation(); removeVM('${vm.id}')" style="background:rgba(255,80,80,0.2);">🗑️ Xóa</button>
+                </div>
+            `;
+        }
+        container.innerHTML = html;
+        vmDatabase.forEach(vm => updateTimerUI(vm.id));
+    }
+
+    function escapeHtml(str) {
+        if (!str) return '';
+        return str.replace(/[&<>]/g, function(m) {
+            if (m === '&') return '&amp;';
+            if (m === '<') return '&lt;';
+            if (m === '>') return '&gt;';
+            return m;
+        });
+    }
+
+    // ======================= INITIALIZATION =======================
+    window.onload = () => {
+        loadVMFromLocal();
+        const savedToken = localStorage.getItem('gh_token');
+        if (savedToken) document.getElementById('github_token').value = savedToken;
+        const savedTailscale = localStorage.getItem('tailscale_token');
+        if (savedTailscale) document.getElementById('tailscale_token').value = savedTailscale;
+        
+        // Auto refresh timer
+        setInterval(() => {
+            for (let vm of vmDatabase) {
+                if (getRemainingSec(vm) <= 0) removeVM(vm.id);
             }
-        }
+        }, 5000);
+    };
 
-        async function createVM() {
-            // ... gọi api/deploy-vm
-        }
-
-        async function saveTailscaleToken() {
-            const token = document.getElementById('tailscale_token').value.trim();
-            if (token) {
-                localStorage.setItem('tailscale_token', token);
-                alert('Đã lưu token Tailscale (sẽ dùng cho lần tạo VM sau)');
-            }
-        }
-
-        // ... các hàm quản lý VM, timer, kết nối noVNC (tương tự)
-    </script>
+    // Export functions to global
+    window.setupAndDeploy = setupAndDeploy;
+    window.createVM = createVM;
+    window.removeVM = removeVM;
+    window.connectToVM = connectToVM;
+    window.saveTailscaleToken = saveTailscaleToken;
+</script>
 </body>
 </html>
