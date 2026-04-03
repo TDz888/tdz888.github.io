@@ -2,8 +2,8 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
-    <title>Neural VM Pro · iOS 26 Liquid Glass</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>VPS Glass · iOS 26 Liquid Edition</title>
     <style>
         * {
             margin: 0;
@@ -13,48 +13,48 @@
 
         body {
             min-height: 100vh;
-            background: radial-gradient(ellipse at 30% 30%, #1a1f2e, #07090f);
-            font-family: -apple-system, 'SF Pro Display', 'SF Pro Text', 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background: radial-gradient(ellipse at 30% 20%, #1a1f2e, #070a12);
+            font-family: -apple-system, 'SF Pro Display', 'Inter', system-ui, sans-serif;
             padding: 20px;
             position: relative;
             overflow-x: hidden;
         }
 
-        /* Animated background orbs */
+        /* Animated background hoa thị - hiệu ứng bồng bềnh */
         body::before {
             content: '';
             position: fixed;
-            top: -20%;
+            top: -30%;
             left: -20%;
-            width: 140%;
-            height: 140%;
-            background: radial-gradient(circle at 30% 40%, rgba(80, 140, 255, 0.12), transparent 60%);
+            width: 150%;
+            height: 150%;
+            background: radial-gradient(circle at 30% 40%, rgba(80, 140, 255, 0.15), transparent 65%);
             pointer-events: none;
+            animation: floatLiquid 22s ease-in-out infinite;
             z-index: 0;
-            animation: floatBg 24s ease-in-out infinite;
         }
 
         body::after {
             content: '';
             position: fixed;
-            bottom: -10%;
-            right: -10%;
-            width: 120%;
-            height: 120%;
-            background: radial-gradient(circle at 70% 80%, rgba(160, 120, 255, 0.08), transparent 70%);
+            bottom: -20%;
+            right: -20%;
+            width: 130%;
+            height: 130%;
+            background: radial-gradient(circle at 70% 80%, rgba(160, 100, 255, 0.1), transparent 70%);
             pointer-events: none;
+            animation: floatLiquid2 28s ease-in-out infinite;
             z-index: 0;
-            animation: floatBg2 28s ease-in-out infinite;
         }
 
-        @keyframes floatBg {
-            0%, 100% { transform: translate(0, 0) rotate(0deg); }
-            50% { transform: translate(3%, 2%) rotate(2deg); }
+        @keyframes floatLiquid {
+            0%, 100% { transform: translate(0, 0) scale(1) rotate(0deg); }
+            50% { transform: translate(4%, 3%) scale(1.05) rotate(2deg); }
         }
 
-        @keyframes floatBg2 {
-            0%, 100% { transform: translate(0, 0) rotate(0deg); }
-            50% { transform: translate(-2%, -3%) rotate(-2deg); }
+        @keyframes floatLiquid2 {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(-3%, -4%) scale(1.08) rotate(-2deg); }
         }
 
         .container {
@@ -64,35 +64,35 @@
             z-index: 2;
         }
 
-        /* Header with blur */
-        .header {
+        /* Header kính mờ */
+        .glass-header {
             text-align: center;
             margin-bottom: 36px;
-            backdrop-filter: blur(20px);
-            padding: 20px;
+            backdrop-filter: blur(24px) saturate(180%);
+            background: rgba(20, 28, 48, 0.35);
             border-radius: 80px;
-            background: rgba(20, 28, 44, 0.3);
+            padding: 24px 20px;
+            border: 0.5px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
         }
 
-        .header h1 {
+        .glass-header h1 {
             font-size: 2.8rem;
             font-weight: 650;
-            background: linear-gradient(135deg, #F0F5FF, #B0D0FF, #7AB0FF);
+            background: linear-gradient(135deg, #F5F9FF, #B0D4FF, #7AB0FF);
             background-clip: text;
             -webkit-background-clip: text;
             color: transparent;
             letter-spacing: -0.02em;
-            text-shadow: 0 2px 10px rgba(90, 140, 255, 0.2);
         }
 
-        .header p {
-            color: rgba(200, 215, 250, 0.7);
+        .glass-header p {
+            color: rgba(200, 215, 250, 0.75);
             font-size: 0.9rem;
             margin-top: 8px;
-            font-weight: 450;
         }
 
-        /* 2 columns layout */
+        /* Layout 2 cột */
         .dashboard {
             display: flex;
             gap: 28px;
@@ -109,22 +109,21 @@
             min-width: 420px;
         }
 
-        /* Liquid Glass Card */
+        /* Card chính - hiệu ứng kính */
         .glass-card {
-            background: rgba(18, 26, 42, 0.45);
-            backdrop-filter: blur(32px) saturate(200%);
-            -webkit-backdrop-filter: blur(32px) saturate(200%);
-            border-radius: 48px;
-            border: 0.8px solid rgba(255, 255, 255, 0.2);
-            box-shadow: 0 25px 45px -12px rgba(0, 0, 0, 0.4), inset 0 0.5px 0 rgba(255, 255, 255, 0.1);
-            transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+            background: rgba(18, 26, 46, 0.45);
+            backdrop-filter: blur(28px) saturate(180%);
+            border-radius: 44px;
+            border: 0.8px solid rgba(255, 255, 255, 0.18);
+            box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.4), inset 0 0.5px 0 rgba(255, 255, 255, 0.08);
+            transition: all 0.35s cubic-bezier(0.2, 0.9, 0.4, 1.1);
             margin-bottom: 24px;
             padding: 28px 26px;
         }
 
         .glass-card:hover {
-            background: rgba(28, 38, 58, 0.55);
-            border-color: rgba(255, 255, 255, 0.3);
+            background: rgba(28, 38, 60, 0.55);
+            border-color: rgba(255, 255, 255, 0.28);
             transform: translateY(-2px);
         }
 
@@ -135,23 +134,22 @@
             margin-bottom: 28px;
         }
 
-        .card-header .icon {
-            width: 44px;
-            height: 44px;
+        .card-header .icon-bg {
+            width: 48px;
+            height: 48px;
             background: linear-gradient(145deg, #2C6EFF, #1A4FCC);
-            border-radius: 28px;
+            border-radius: 30px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.4rem;
-            box-shadow: 0 6px 14px rgba(44, 110, 255, 0.3);
+            font-size: 1.5rem;
+            box-shadow: 0 8px 18px rgba(44, 110, 255, 0.3);
         }
 
         .card-header h2 {
             font-size: 1.6rem;
             font-weight: 600;
             color: #EEF3FF;
-            letter-spacing: -0.3px;
         }
 
         .form-group {
@@ -160,7 +158,7 @@
 
         label {
             display: block;
-            color: #CCDAFF;
+            color: #C5D6FF;
             font-size: 0.85rem;
             font-weight: 510;
             margin-bottom: 8px;
@@ -169,42 +167,39 @@
 
         input, select {
             width: 100%;
-            padding: 15px 20px;
-            background: rgba(8, 14, 26, 0.7);
+            padding: 14px 20px;
+            background: rgba(6, 12, 24, 0.7);
             border: 1px solid rgba(100, 140, 220, 0.5);
             border-radius: 40px;
             font-size: 0.95rem;
             color: white;
             font-weight: 460;
-            transition: all 0.25s ease;
+            transition: all 0.2s ease;
         }
 
         input:focus, select:focus {
             outline: none;
             border-color: #5E9CFF;
-            background: rgba(16, 24, 40, 0.85);
+            background: rgba(12, 20, 36, 0.9);
             box-shadow: 0 0 0 4px rgba(94, 156, 255, 0.15);
-            transform: scale(1.01);
         }
 
         button {
             background: linear-gradient(105deg, #2C6EFF, #1A4FCC);
             border: none;
-            padding: 15px 24px;
+            padding: 14px 24px;
             border-radius: 48px;
             font-weight: 620;
             font-size: 1rem;
             color: white;
             width: 100%;
             cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            transition: all 0.3s ease;
             box-shadow: 0 6px 18px rgba(44, 110, 255, 0.35);
-            margin-top: 6px;
         }
 
         button:active {
-            transform: scale(0.96);
-            box-shadow: 0 2px 8px rgba(44, 110, 255, 0.4);
+            transform: scale(0.97);
         }
 
         button:disabled {
@@ -212,27 +207,13 @@
             transform: none;
         }
 
-        .btn-outline {
-            background: rgba(44, 110, 255, 0.2);
-            border: 1px solid rgba(94, 156, 255, 0.6);
-            box-shadow: none;
-            color: #BBDBFF;
-            margin-top: 12px;
-        }
-
-        .btn-outline:hover {
-            background: rgba(44, 110, 255, 0.35);
-            border-color: #5E9CFF;
-        }
-
         .status-badge {
-            margin-top: 18px;
+            margin-top: 16px;
             padding: 12px 18px;
             border-radius: 40px;
             display: none;
             font-size: 0.8rem;
             font-weight: 500;
-            backdrop-filter: blur(12px);
             text-align: center;
         }
 
@@ -258,22 +239,22 @@
             color: #FFE2B5;
         }
 
-        /* VM Cards - Liquid style */
+        /* Danh sách VM */
         .vm-grid {
             display: flex;
             flex-direction: column;
-            gap: 18px;
-            max-height: 68vh;
+            gap: 16px;
+            max-height: 65vh;
             overflow-y: auto;
-            padding-right: 8px;
+            padding-right: 6px;
         }
 
         .vm-grid::-webkit-scrollbar {
-            width: 5px;
+            width: 4px;
         }
 
         .vm-grid::-webkit-scrollbar-track {
-            background: rgba(255,255,255,0.04);
+            background: rgba(255,255,255,0.05);
             border-radius: 10px;
         }
 
@@ -282,28 +263,28 @@
             border-radius: 10px;
         }
 
-        .vm-card-liquid {
-            background: rgba(14, 22, 38, 0.65);
-            backdrop-filter: blur(24px);
-            border-radius: 40px;
+        .vm-card {
+            background: rgba(12, 20, 36, 0.65);
+            backdrop-filter: blur(20px);
+            border-radius: 36px;
             padding: 20px 24px;
-            border: 0.5px solid rgba(255, 255, 255, 0.18);
-            transition: all 0.35s cubic-bezier(0.2, 0.9, 0.4, 1.2);
+            border: 0.5px solid rgba(255, 255, 255, 0.15);
+            transition: all 0.3s;
             cursor: pointer;
         }
 
-        .vm-card-liquid:hover {
+        .vm-card:hover {
             background: rgba(24, 34, 54, 0.75);
             border-color: rgba(100, 160, 255, 0.5);
-            transform: translateX(6px) scale(1.01);
+            transform: translateX(5px);
         }
 
-        .vm-card-header {
+        .vm-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             flex-wrap: wrap;
-            margin-bottom: 14px;
+            margin-bottom: 12px;
         }
 
         .vm-os {
@@ -315,114 +296,76 @@
             color: transparent;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
         }
 
-        .vm-timer-liquid {
-            font-family: 'SF Mono', monospace;
+        .vm-timer {
+            font-family: monospace;
             background: rgba(0, 0, 0, 0.5);
-            backdrop-filter: blur(12px);
-            padding: 6px 16px;
-            border-radius: 60px;
+            padding: 5px 14px;
+            border-radius: 40px;
             font-size: 0.8rem;
-            font-weight: 540;
+            font-weight: 500;
             color: #FFE5A3;
-            letter-spacing: 0.5px;
         }
 
-        .vm-info-collapsed {
+        .vm-info {
             display: flex;
             gap: 20px;
             flex-wrap: wrap;
             font-size: 0.75rem;
             color: #A0B5E0;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
         }
 
-        .vm-details-expanded {
+        .vm-detail {
             max-height: 0;
             overflow: hidden;
-            transition: max-height 0.5s cubic-bezier(0.33, 1, 0.68, 1);
+            transition: max-height 0.4s;
             background: rgba(0, 0, 0, 0.3);
-            border-radius: 32px;
+            border-radius: 28px;
             margin-top: 0;
         }
 
-        .vm-card-liquid.expanded .vm-details-expanded {
-            max-height: 280px;
-            margin-top: 16px;
-            padding: 16px;
-        }
-
-        .detail-row {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 16px;
-            font-family: monospace;
-            font-size: 0.8rem;
-            background: rgba(0, 0, 0, 0.25);
-            border-radius: 28px;
+        .vm-card.expanded .vm-detail {
+            max-height: 220px;
+            margin-top: 14px;
             padding: 14px;
         }
 
-        .detail-row span {
-            color: #8EADFF;
+        .detail-row {
+            font-family: monospace;
+            font-size: 0.75rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
         }
 
-        .detail-row b {
-            color: #D0E6FF;
-            font-weight: 500;
-        }
-
-        .btn-delete-liquid {
+        .btn-delete {
             background: rgba(255, 100, 100, 0.2);
             border: 0.5px solid rgba(255, 120, 120, 0.6);
             color: #FFB7B7;
-            padding: 6px 18px;
+            padding: 6px 16px;
             border-radius: 50px;
             font-size: 0.7rem;
-            font-weight: 500;
             width: auto;
             cursor: pointer;
-            transition: 0.2s;
             margin-top: 12px;
         }
 
-        .btn-delete-liquid:hover {
-            background: rgba(255, 80, 80, 0.45);
-            color: white;
-        }
-
-        .empty-vm {
+        .empty-state {
             text-align: center;
-            padding: 56px 24px;
+            padding: 50px 20px;
             color: #8A9FD0;
             background: rgba(0, 0, 0, 0.2);
-            border-radius: 56px;
-            font-weight: 470;
-        }
-
-        .spinner {
-            display: inline-block;
-            width: 15px;
-            height: 15px;
-            border: 2px solid rgba(255,255,255,0.25);
-            border-radius: 50%;
-            border-top-color: white;
-            animation: spin 0.7s linear infinite;
-            margin-right: 8px;
-            vertical-align: middle;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
+            border-radius: 48px;
         }
 
         footer {
             text-align: center;
             color: #5A6E96;
             font-size: 0.7rem;
-            margin-top: 28px;
+            margin-top: 30px;
             padding: 20px;
         }
 
@@ -430,10 +373,7 @@
             .dashboard {
                 flex-direction: column;
             }
-            .glass-card {
-                padding: 20px;
-            }
-            .header h1 {
+            .glass-header h1 {
                 font-size: 2rem;
             }
         }
@@ -441,32 +381,30 @@
 </head>
 <body>
 <div class="container">
-    <div class="header">
-        <h1>🧠 NEURAL VM PRO</h1>
-        <p>iOS 26 Liquid Glass · Tự động sinh repo · Bồng bềnh như mây</p>
+    <div class="glass-header">
+        <h1>🧊 VPS GLASS · iOS 26</h1>
+        <p>Liquid Metal · Tự động sinh GitHub VPS · Bồng bềnh như mây</p>
     </div>
 
     <div class="dashboard">
-        <!-- LEFT PANEL: Config + Create -->
         <div class="panel-left">
             <div class="glass-card">
                 <div class="card-header">
-                    <div class="icon">⚙️</div>
-                    <h2>Cấu hình nền tảng</h2>
+                    <div class="icon-bg">🔐</div>
+                    <h2>Khởi tạo nền tảng</h2>
                 </div>
                 <div class="form-group">
-                    <label>🔑 GitHub Token</label>
-                    <input type="password" id="github_token" placeholder="ghp_xxxxxxxxxxxx">
-                    <div class="info-text" style="font-size:0.7rem; margin-top:6px;">Cần quyền repo + workflow</div>
+                    <label>🍃 GitHub Token</label>
+                    <input type="password" id="github_token" placeholder="ghp_xxxx hoặc github_pat_xxxx">
                 </div>
-                <button onclick="autoSetupAndDeploy()" id="setupBtn">✨ Tự động tạo repo + Deploy VM</button>
+                <button onclick="setupAndDeploy()" id="setupBtn">✨ Tự động tạo repo + Deploy VM</button>
                 <div id="setupStatus" class="status-badge"></div>
             </div>
 
             <div class="glass-card">
                 <div class="card-header">
-                    <div class="icon">🚀</div>
-                    <h2>Tạo máy chủ</h2>
+                    <div class="icon-bg">⚙️</div>
+                    <h2>Cấu hình máy chủ</h2>
                 </div>
                 <div class="form-group">
                     <label>⏱️ Thời gian sống</label>
@@ -481,127 +419,107 @@
                     <label>💿 Hệ điều hành</label>
                     <select id="target_os">
                         <option value="windows">🪟 Windows 11</option>
-                        <option value="ubuntu22">🐧 Ubuntu 22.04</option>
-                        <option value="ubuntu24">🐧 Ubuntu 24.04</option>
-                        <option value="debian">🐍 Debian 12</option>
-                        <option value="centos">📦 CentOS 9</option>
-                        <option value="almalinux">🔷 AlmaLinux 9</option>
+                        <option value="ubuntu">🐧 Ubuntu 22.04</option>
+                        <option value="debian">📀 Debian 12</option>
                     </select>
                 </div>
-                <div class="form-group">
-                    <label>⚡ Performance Mode</label>
-                    <select id="performance_mode">
-                        <option value="balanced">Cân bằng</option>
-                        <option value="performance">Hiệu năng</option>
-                        <option value="quantum">Quantum</option>
-                    </select>
-                </div>
-                <button onclick="runVM()" id="deployBtn">💨 Kích hoạt VM ngay</button>
+                <button onclick="createVM()" id="deployBtn">💨 Kích hoạt VM Glass</button>
                 <div id="deployStatus" class="status-badge"></div>
             </div>
         </div>
 
-        <!-- RIGHT PANEL: VM List -->
         <div class="panel-right">
-            <div class="glass-card" style="min-height: 550px;">
+            <div class="glass-card">
                 <div class="card-header">
-                    <div class="icon">📡</div>
-                    <h2>Máy chủ đang chạy</h2>
+                    <div class="icon-bg">🖥️</div>
+                    <h2>Máy chủ đang bay</h2>
                 </div>
-                <div id="vmListContainer" class="vm-grid">
-                    <div class="empty-vm">✨ Chưa có VM nào<br>Nhấn "Tự động tạo repo + Deploy VM" để bắt đầu</div>
+                <div id="vmList" class="vm-grid">
+                    <div class="empty-state">✨ Chưa có VM nào<br>Bấm "Tự động tạo repo + Deploy VM"</div>
                 </div>
             </div>
         </div>
     </div>
-    <footer>Neural VM Pro · Liquid Glass Engine · Tự động thu hồi sau hết giờ</footer>
+    <footer>Liquid Glass Engine · GitHub Actions Runner · Tự động thu hồi</footer>
 </div>
 
 <script>
+    // ======================= QUẢN LÝ VM ẢO (HIỂN THỊ) =======================
     let vmDatabase = [];
-    let currentRepoName = '';
     let currentOwner = '';
+    let currentRepo = '';
 
-    function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
-
-    async function getUser(token) {
-        const r = await fetch("https://api.github.com/user", {
-            headers: { "Authorization": "Bearer " + token }
-        });
-        const d = await r.json();
-        return d.login;
-    }
-
-    function showStatus(elementId, message, type) {
+    function showStatus(elementId, msg, type) {
         const el = document.getElementById(elementId);
         if (!el) return;
-        el.className = 'status-badge show ' + type;
-        el.innerHTML = message;
-        setTimeout(() => {
-            if (el) el.classList.remove('show');
-        }, 5000);
+        el.className = `status-badge show ${type}`;
+        el.innerHTML = msg;
+        setTimeout(() => el.classList.remove('show'), 5000);
     }
 
-    async function autoSetupAndDeploy() {
-        const token = document.getElementById('github_token').value;
+    async function getUserFromToken(token) {
+        const res = await fetch('https://api.github.com/user', {
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
+        if (!res.ok) throw new Error('Token không hợp lệ');
+        const data = await res.json();
+        return data.login;
+    }
+
+    async function setupAndDeploy() {
+        const token = document.getElementById('github_token').value.trim();
         if (!token) {
             alert('Vui lòng nhập GitHub Token');
             return;
         }
 
-        showStatus('setupStatus', 'Đang kiểm tra token...', 'loading');
+        showStatus('setupStatus', '🔄 Đang kiểm tra token...', 'loading');
         document.getElementById('setupBtn').disabled = true;
 
         try {
-            const owner = await getUser(token);
-            if (!owner) throw new Error('Token không hợp lệ');
-            
-            const repoName = "neural-vm-" + Date.now();
+            const owner = await getUserFromToken(token);
+            const repoName = `vpsglass-${Date.now()}`;
             currentOwner = owner;
-            currentRepoName = repoName;
+            currentRepo = repoName;
 
-            showStatus('setupStatus', 'Đang tạo repository: ' + repoName + ' ...', 'loading');
+            showStatus('setupStatus', `📦 Đang tạo repo: ${repoName}...`, 'loading');
 
-            // Tạo repo mới
-            const createResponse = await fetch("https://api.github.com/user/repos", {
-                method: "POST",
+            // Tạo repo thật
+            const createRepo = await fetch('https://api.github.com/user/repos', {
+                method: 'POST',
                 headers: {
-                    "Authorization": "Bearer " + token,
-                    "Content-Type": "application/json"
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
                     name: repoName,
-                    description: "Neural VM Auto Generated",
                     private: false,
-                    auto_init: true
+                    auto_init: true,
+                    description: 'VPS Glass by Liquid Engine'
                 })
             });
 
-            if (!createResponse.ok) {
-                const err = await createResponse.json();
+            if (!createRepo.ok) {
+                const err = await createRepo.json();
                 throw new Error(err.message || 'Tạo repo thất bại');
             }
 
-            showStatus('setupStatus', 'Đã tạo repo! Đang upload workflow...', 'loading');
-            await sleep(2000);
+            showStatus('setupStatus', '📤 Đang upload workflow...', 'loading');
 
-            // Upload workflow YAML
-            const yml = `name: Neural VM Deploy
+            // Nội dung workflow YAML (backend thực sự)
+            const workflowYAML = `name: VPS Glass Deploy
 
 on:
   workflow_dispatch:
     inputs:
       duration:
-        description: 'Duration minutes'
+        description: 'Duration (minutes)'
         required: true
         default: '120'
       target_os:
         description: 'Target OS'
         required: true
         default: 'windows'
-
-env:
-  TAILSCALE_AUTH_KEY: \${{ secrets.TAILSCALE_AUTH_KEY }}
 
 jobs:
   windows:
@@ -613,38 +531,38 @@ jobs:
         run: |
           Set-ItemProperty -Path 'HKLM:\\System\\CurrentControlSet\\Control\\Terminal Server' -Name "fDenyTSConnections" -Value 0 -Force
           netsh advfirewall firewall add rule name="RDP" dir=in action=allow protocol=TCP localport=3389
-      - name: Create User
+      - name: Create User & Pass
         run: |
-          \$user = "vmuser_" + (Get-Random -Minimum 1000 -Maximum 9999)
-          \$pass = -join (((65..90) + (97..122) + (48..57)) | Get-Random -Count 16 | ForEach-Object {[char]\$_})
-          net user \$user \$pass /add
-          net localgroup Administrators \$user /add
-          echo "USERNAME=\$user" >> \$env:GITHUB_ENV
-          echo "PASSWORD=\$pass" >> \$env:GITHUB_ENV
-      - name: Get IP
+          $user = "glass_" + (Get-Random -Minimum 1000 -Maximum 9999)
+          $pass = -join (((65..90) + (97..122) + (48..57)) | Get-Random -Count 16 | ForEach-Object {[char]$_})
+          net user $user $pass /add
+          net localgroup Administrators $user /add
+          echo "USERNAME=$user" >> $env:GITHUB_ENV
+          echo "PASSWORD=$pass" >> $env:GITHUB_ENV
+      - name: Get Public IP
         run: |
-          \$ip = (Invoke-WebRequest -Uri https://api.ipify.org -UseBasicParsing).Content
-          echo "PUBLIC_IP=\$ip" >> \$env:GITHUB_ENV
+          $ip = (Invoke-WebRequest -Uri https://api.ipify.org -UseBasicParsing).Content
+          echo "PUBLIC_IP=$ip" >> $env:GITHUB_ENV
       - name: Keep Alive
         run: |
-          \$dur = [int]"\${{ github.event.inputs.duration }}"
-          \$end = (Get-Date).AddMinutes(\$dur)
-          while ((Get-Date) -lt \$end) { Start-Sleep -Seconds 60 }
+          $dur = [int]"\${{ github.event.inputs.duration }}"
+          $end = (Get-Date).AddMinutes($dur)
+          while ((Get-Date) -lt $end) { Start-Sleep -Seconds 60 }
 
-  ubuntu22:
-    runs-on: ubuntu-22.04
-    if: github.event.inputs.target_os == 'ubuntu22'
+  linux:
+    runs-on: ubuntu-latest
+    if: github.event.inputs.target_os != 'windows'
     timeout-minutes: 360
     steps:
       - name: Setup SSH
         run: |
           sudo apt update -qq
-          sudo apt install -y -qq openssh-server
+          sudo apt install -y -qq openssh-server curl
           sudo systemctl enable ssh
           sudo systemctl start ssh
       - name: Create User
         run: |
-          USER="ub_\$((RANDOM % 9000 + 1000))"
+          USER="glass_\$((RANDOM % 9000 + 1000))"
           PASS=\$(openssl rand -base64 16 | tr -d '=+/' | cut -c1-20)
           sudo useradd -m -s /bin/bash "\$USER"
           echo "\$USER:\$PASS" | sudo chpasswd
@@ -660,285 +578,138 @@ jobs:
           DUR=\${{ github.event.inputs.duration }}
           END=\$(( \$(date +%s) + DUR * 60 ))
           while [ \$(date +%s) -lt \$END ]; do sleep 60; done
-
-  ubuntu24:
-    runs-on: ubuntu-24.04
-    if: github.event.inputs.target_os == 'ubuntu24'
-    timeout-minutes: 360
-    steps:
-      - name: Setup SSH
-        run: |
-          sudo apt update -qq
-          sudo apt install -y -qq openssh-server
-          sudo systemctl enable ssh
-          sudo systemctl start ssh
-      - name: Create User
-        run: |
-          USER="ub24_\$((RANDOM % 9000 + 1000))"
-          PASS=\$(openssl rand -base64 16 | tr -d '=+/' | cut -c1-20)
-          sudo useradd -m -s /bin/bash "\$USER"
-          echo "\$USER:\$PASS" | sudo chpasswd
-          sudo usermod -aG sudo "\$USER"
-          echo "USERNAME=\$USER" >> \$GITHUB_ENV
-          echo "PASSWORD=\$PASS" >> \$GITHUB_ENV
-      - name: Get IP
-        run: |
-          IP=\$(curl -s https://api.ipify.org)
-          echo "PUBLIC_IP=\$IP" >> \$GITHUB_ENV
-      - name: Keep Alive
-        run: |
-          DUR=\${{ github.event.inputs.duration }}
-          sleep \$((DUR * 60))
-
-  debian:
-    runs-on: ubuntu-latest
-    container:
-      image: debian:12
-    if: github.event.inputs.target_os == 'debian'
-    timeout-minutes: 360
-    steps:
-      - name: Setup SSH
-        run: |
-          apt update -qq
-          apt install -y -qq openssh-server sudo curl
-          ssh-keygen -A
-          /usr/sbin/sshd
-      - name: Create User
-        run: |
-          USER="deb_\$((RANDOM % 9000 + 1000))"
-          PASS=\$(openssl rand -base64 16 | tr -d '=+/' | cut -c1-20)
-          useradd -m -s /bin/bash "\$USER"
-          echo "\$USER:\$PASS" | chpasswd
-          usermod -aG sudo "\$USER"
-          echo "USERNAME=\$USER" >> \$GITHUB_ENV
-          echo "PASSWORD=\$PASS" >> \$GITHUB_ENV
-      - name: Get IP
-        run: |
-          IP=\$(wget -qO- https://api.ipify.org)
-          echo "PUBLIC_IP=\$IP" >> \$GITHUB_ENV
-      - name: Keep Alive
-        run: |
-          DUR=\${{ github.event.inputs.duration }}
-          sleep \$((DUR * 60))
-
-  centos:
-    runs-on: ubuntu-latest
-    container:
-      image: quay.io/centos/centos:stream9
-    if: github.event.inputs.target_os == 'centos'
-    timeout-minutes: 360
-    steps:
-      - name: Setup SSH
-        run: |
-          dnf install -y openssh-server sudo curl
-          ssh-keygen -A
-          /usr/sbin/sshd
-      - name: Create User
-        run: |
-          USER="cent_\$((RANDOM % 9000 + 1000))"
-          PASS=\$(openssl rand -base64 16 | tr -d '=+/' | cut -c1-20)
-          useradd -m -s /bin/bash "\$USER"
-          echo "\$USER:\$PASS" | chpasswd
-          usermod -aG wheel "\$USER"
-          echo "USERNAME=\$USER" >> \$GITHUB_ENV
-          echo "PASSWORD=\$PASS" >> \$GITHUB_ENV
-      - name: Get IP
-        run: |
-          IP=\$(curl -s https://api.ipify.org)
-          echo "PUBLIC_IP=\$IP" >> \$GITHUB_ENV
-      - name: Keep Alive
-        run: |
-          DUR=\${{ github.event.inputs.duration }}
-          sleep \$((DUR * 60))
-
-  almalinux:
-    runs-on: ubuntu-latest
-    container:
-      image: almalinux:9
-    if: github.event.inputs.target_os == 'almalinux'
-    timeout-minutes: 360
-    steps:
-      - name: Setup SSH
-        run: |
-          dnf install -y openssh-server sudo curl
-          ssh-keygen -A
-          /usr/sbin/sshd
-      - name: Create User
-        run: |
-          USER="alma_\$((RANDOM % 9000 + 1000))"
-          PASS=\$(openssl rand -base64 16 | tr -d '=+/' | cut -c1-20)
-          useradd -m -s /bin/bash "\$USER"
-          echo "\$USER:\$PASS" | chpasswd
-          usermod -aG wheel "\$USER"
-          echo "USERNAME=\$USER" >> \$GITHUB_ENV
-          echo "PASSWORD=\$PASS" >> \$GITHUB_ENV
-      - name: Get IP
-        run: |
-          IP=\$(curl -s https://api.ipify.org)
-          echo "PUBLIC_IP=\$IP" >> \$GITHUB_ENV
-      - name: Keep Alive
-        run: |
-          DUR=\${{ github.event.inputs.duration }}
-          sleep \$((DUR * 60))
 `;
 
-            const content = btoa(unescape(encodeURIComponent(yml)));
+            const encodedContent = btoa(unescape(encodeURIComponent(workflowYAML)));
 
-            const uploadUrl = `https://api.github.com/repos/${owner}/${repoName}/contents/.github/workflows/deploy.yml`;
-            const uploadResponse = await fetch(uploadUrl, {
-                method: "PUT",
+            const uploadWorkflow = await fetch(`https://api.github.com/repos/${owner}/${repoName}/contents/.github/workflows/deploy.yml`, {
+                method: 'PUT',
                 headers: {
-                    "Authorization": "Bearer " + token,
-                    "Content-Type": "application/json"
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
-                    message: "Add Neural VM workflow",
-                    content: content,
-                    branch: "main"
+                    message: 'Add VPS Glass workflow',
+                    content: encodedContent,
+                    branch: 'main'
                 })
             });
 
-            if (!uploadResponse.ok) {
-                throw new Error('Upload workflow thất bại');
-            }
+            if (!uploadWorkflow.ok) throw new Error('Upload workflow thất bại');
 
-            // Lưu thông tin vào localStorage
-            localStorage.setItem("github_token", token);
-            localStorage.setItem("github_owner", owner);
-            localStorage.setItem("github_repo", repoName);
+            // Lưu lại token, owner, repo
+            localStorage.setItem('gh_token', token);
+            localStorage.setItem('gh_owner', owner);
+            localStorage.setItem('gh_repo', repoName);
 
-            showStatus('setupStatus', '✅ Thành công! Repo "' + repoName + '" đã sẵn sàng.', 'success');
+            showStatus('setupStatus', `✅ Thành công! Repo: ${repoName} đã sẵn sàng.`, 'success');
+            await new Promise(r => setTimeout(r, 1000));
+            await createVM();
 
-            // Tự động deploy VM sau khi setup xong
-            await sleep(1000);
-            await runVM();
-
-        } catch (error) {
-            showStatus('setupStatus', 'Lỗi: ' + error.message, 'error');
+        } catch (err) {
+            showStatus('setupStatus', `❌ Lỗi: ${err.message}`, 'error');
         } finally {
             document.getElementById('setupBtn').disabled = false;
         }
     }
 
-    async function runVM() {
-        let token = localStorage.getItem("github_token");
-        let owner = localStorage.getItem("github_owner");
-        let repo = localStorage.getItem("github_repo");
+    async function createVM() {
+        let token = localStorage.getItem('gh_token');
+        let owner = localStorage.getItem('gh_owner');
+        let repo = localStorage.getItem('gh_repo');
 
         if (!token || !owner || !repo) {
-            const inputToken = document.getElementById('github_token').value;
-            if (!inputToken) {
-                alert('Vui lòng nhập GitHub Token và bấm "Tự động tạo repo + Deploy VM" trước');
+            const freshToken = document.getElementById('github_token').value.trim();
+            if (!freshToken) {
+                alert('Cần nhập GitHub Token và chạy "Tự động tạo repo" trước');
                 return;
             }
-            await autoSetupAndDeploy();
+            await setupAndDeploy();
             return;
         }
 
         const duration = document.getElementById('duration').value;
-        const target_os = document.getElementById('target_os').value;
+        const targetOS = document.getElementById('target_os').value;
 
-        showStatus('deployStatus', 'Đang gửi yêu cầu tạo VM...', 'loading');
+        showStatus('deployStatus', '🚀 Đang gửi lệnh tạo VM...', 'loading');
         document.getElementById('deployBtn').disabled = true;
 
         try {
-            const url = `https://api.github.com/repos/${owner}/${repo}/actions/workflows/deploy.yml/dispatches`;
-            const response = await fetch(url, {
-                method: "POST",
+            const dispatchUrl = `https://api.github.com/repos/${owner}/${repo}/actions/workflows/deploy.yml/dispatches`;
+            const res = await fetch(dispatchUrl, {
+                method: 'POST',
                 headers: {
-                    "Authorization": "Bearer " + token,
-                    "Content-Type": "application/json"
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
-                    ref: "main",
+                    ref: 'main',
                     inputs: {
                         duration: duration,
-                        target_os: target_os
+                        target_os: targetOS
                     }
                 })
             });
 
-            if (response.ok) {
-                const osMap = {
-                    'windows': 'Windows 11',
-                    'ubuntu22': 'Ubuntu 22.04',
-                    'ubuntu24': 'Ubuntu 24.04',
-                    'debian': 'Debian 12',
-                    'centos': 'CentOS 9',
-                    'almalinux': 'AlmaLinux 9'
-                };
-                const osLabel = osMap[target_os] || target_os;
-                
-                addVM({
-                    name: osLabel,
+            if (res.ok) {
+                const osName = targetOS === 'windows' ? 'Windows 11' : (targetOS === 'ubuntu' ? 'Ubuntu 22.04' : 'Debian 12');
+                addVirtualVM({
+                    name: osName,
                     ip: 'Đang khởi tạo...',
-                    user: 'Đang khởi tạo...',
-                    password: 'Đang khởi tạo...',
-                    durationMinutes: parseInt(duration),
-                    targetOS: osLabel,
-                    tailscaleIP: null,
-                    connectionInfo: 'Thông tin sẽ xuất hiện sau 2-3 phút trong GitHub Actions'
+                    user: 'Đang tạo...',
+                    pass: 'Đang tạo...',
+                    duration: parseInt(duration)
                 });
-                
-                showStatus('deployStatus', '✅ Đã kích hoạt workflow! VM sẽ sẵn sàng sau vài phút.', 'success');
+                showStatus('deployStatus', '✅ Workflow đã kích hoạt! VM sẽ xuất hiện sau 2-3 phút.', 'success');
             } else {
-                const err = await response.text();
-                throw new Error('HTTP ' + response.status);
+                const errorText = await res.text();
+                throw new Error(`HTTP ${res.status}: ${errorText.slice(0, 100)}`);
             }
-        } catch (error) {
-            showStatus('deployStatus', 'Lỗi: ' + error.message, 'error');
+        } catch (err) {
+            showStatus('deployStatus', `❌ Lỗi: ${err.message}`, 'error');
         } finally {
             document.getElementById('deployBtn').disabled = false;
             setTimeout(() => {
                 const st = document.getElementById('deployStatus');
                 if (st) st.classList.remove('show');
-            }, 5000);
+            }, 4000);
         }
     }
 
-    function addVM(vmInfo) {
+    // Quản lý VM hiển thị
+    function addVirtualVM(vm) {
         const newVM = {
-            id: 'vm_' + Date.now() + '_' + Math.floor(Math.random() * 10000),
-            name: vmInfo.name,
-            ip: vmInfo.ip,
-            user: vmInfo.user,
-            password: vmInfo.password,
-            tailscaleIP: vmInfo.tailscaleIP || null,
+            id: Date.now() + '_' + Math.random(),
+            name: vm.name,
+            ip: vm.ip,
+            user: vm.user,
+            password: vm.pass,
+            durationMinutes: vm.duration,
             createdAt: Date.now(),
-            durationMinutes: vmInfo.durationMinutes,
-            targetOS: vmInfo.targetOS,
-            connectionInfo: vmInfo.connectionInfo || '',
-            expanded: false,
-            timerInterval: null
+            expanded: false
         };
         vmDatabase.push(newVM);
-        saveVMs();
+        saveVMToLocal();
         renderVMList();
-        startTimer(newVM.id);
+        startTimerForVM(newVM.id);
     }
 
     function removeVM(id) {
-        const idx = vmDatabase.findIndex(v => v.id === id);
-        if (idx !== -1) {
-            if (vmDatabase[idx].timerInterval) clearInterval(vmDatabase[idx].timerInterval);
-            vmDatabase.splice(idx, 1);
-            saveVMs();
-            renderVMList();
-        }
+        vmDatabase = vmDatabase.filter(v => v.id !== id);
+        saveVMToLocal();
+        renderVMList();
     }
 
     function toggleExpand(id) {
         const vm = vmDatabase.find(v => v.id === id);
-        if (vm) {
-            vm.expanded = !vm.expanded;
-            renderVMList();
-        }
+        if (vm) vm.expanded = !vm.expanded;
+        renderVMList();
     }
 
-    function getRemainingSeconds(vm) {
+    function getRemainingSec(vm) {
         const elapsed = (Date.now() - vm.createdAt) / 1000;
-        const remaining = vm.durationMinutes * 60 - elapsed;
-        return remaining > 0 ? remaining : 0;
+        const remain = vm.durationMinutes * 60 - elapsed;
+        return remain > 0 ? remain : 0;
     }
 
     function formatTime(sec) {
@@ -946,96 +717,82 @@ jobs:
         const h = Math.floor(sec / 3600);
         const m = Math.floor((sec % 3600) / 60);
         const s = Math.floor(sec % 60);
-        if (h > 0) return `${h}h ${m}m ${s}s`;
+        if (h > 0) return `${h}h ${m}m`;
         if (m > 0) return `${m}m ${s}s`;
         return `${s}s`;
     }
 
-    function updateTimer(id) {
+    function updateTimerUI(id) {
         const vm = vmDatabase.find(v => v.id === id);
         if (!vm) return;
-        const remaining = getRemainingSeconds(vm);
-        const timerEl = document.getElementById('timer-' + id);
+        const remain = getRemainingSec(vm);
+        const timerEl = document.getElementById(`timer-${id}`);
         if (timerEl) {
-            if (remaining <= 0) {
+            if (remain <= 0) {
                 timerEl.innerHTML = 'Hết hạn';
-                if (!vm._expired) {
-                    vm._expired = true;
-                    setTimeout(() => removeVM(id), 2000);
-                }
+                setTimeout(() => removeVM(id), 2000);
             } else {
-                timerEl.innerHTML = formatTime(remaining);
+                timerEl.innerHTML = formatTime(remain);
             }
         }
     }
 
-    function startTimer(id) {
-        const vm = vmDatabase.find(v => v.id === id);
-        if (!vm) return;
-        if (vm.timerInterval) clearInterval(vm.timerInterval);
-        vm.timerInterval = setInterval(() => updateTimer(id), 1000);
-        updateTimer(id);
+    function startTimerForVM(id) {
+        setInterval(() => updateTimerUI(id), 1000);
     }
 
-    function saveVMs() {
+    function saveVMToLocal() {
         const toStore = vmDatabase.map(v => ({
             id: v.id, name: v.name, ip: v.ip, user: v.user, password: v.password,
-            tailscaleIP: v.tailscaleIP, createdAt: v.createdAt, durationMinutes: v.durationMinutes,
-            targetOS: v.targetOS, connectionInfo: v.connectionInfo, expanded: false
+            durationMinutes: v.durationMinutes, createdAt: v.createdAt, expanded: false
         }));
-        localStorage.setItem('neural_vms', JSON.stringify(toStore));
+        localStorage.setItem('vpsglass_vms', JSON.stringify(toStore));
     }
 
-    function loadVMs() {
-        const stored = localStorage.getItem('neural_vms');
+    function loadVMFromLocal() {
+        const stored = localStorage.getItem('vpsglass_vms');
         if (stored) {
             try {
                 vmDatabase = JSON.parse(stored);
-                vmDatabase.forEach(v => { v.expanded = false; v.timerInterval = null; });
+                vmDatabase.forEach(v => { v.expanded = false; });
                 renderVMList();
-                vmDatabase.forEach(v => startTimer(v.id));
+                vmDatabase.forEach(v => startTimerForVM(v.id));
             } catch(e) { vmDatabase = []; }
         }
     }
 
     function renderVMList() {
-        const container = document.getElementById('vmListContainer');
+        const container = document.getElementById('vmList');
         if (!container) return;
         if (vmDatabase.length === 0) {
-            container.innerHTML = '<div class="empty-vm">✨ Chưa có VM nào<br>Nhấn "Tự động tạo repo + Deploy VM" để bắt đầu</div>';
+            container.innerHTML = '<div class="empty-state">✨ Chưa có VM nào<br>Bấm "Tự động tạo repo + Deploy VM"</div>';
             return;
         }
-
         let html = '';
         for (let vm of vmDatabase) {
-            const isWindows = vm.targetOS && vm.targetOS.toLowerCase().includes('windows');
-            const expandedClass = vm.expanded ? 'expanded' : '';
+            const isWin = vm.name.includes('Windows');
             html += `
-                <div class="vm-card-liquid ${expandedClass}" onclick="toggleExpand('${vm.id}')">
-                    <div class="vm-card-header">
-                        <div class="vm-os">
-                            <span>${vm.targetOS === 'Windows 11' ? '🪟' : '🐧'}</span> ${escapeHtml(vm.name)}
-                        </div>
-                        <div class="vm-timer-liquid" id="timer-${vm.id}">--:--</div>
+                <div class="vm-card ${vm.expanded ? 'expanded' : ''}" onclick="toggleExpand('${vm.id}')">
+                    <div class="vm-header">
+                        <div class="vm-os"><span>${isWin ? '🪟' : '🐧'}</span> ${escapeHtml(vm.name)}</div>
+                        <div class="vm-timer" id="timer-${vm.id}">${formatTime(getRemainingSec(vm))}</div>
                     </div>
-                    <div class="vm-info-collapsed">
-                        <span>🔌 ${isWindows ? 'RDP' : 'SSH'}: ${escapeHtml(vm.ip)}</span>
+                    <div class="vm-info">
+                        <span>${isWin ? 'RDP' : 'SSH'}: ${escapeHtml(vm.ip)}</span>
                         <span>👤 ${escapeHtml(vm.user)}</span>
                     </div>
-                    <div class="vm-details-expanded">
+                    <div class="vm-detail">
                         <div class="detail-row">
-                            <div>🌍 Public IP: <b>${escapeHtml(vm.ip)}</b></div>
-                            ${vm.tailscaleIP ? '<div>🔒 Tailscale: <b>' + escapeHtml(vm.tailscaleIP) + '</b></div>' : ''}
-                            <div>🔑 Password: <b>${escapeHtml(vm.password)}</b></div>
+                            <div>🌍 IP: <b>${escapeHtml(vm.ip)}</b></div>
+                            <div>🔑 Pass: <b>${escapeHtml(vm.password)}</b></div>
                         </div>
-                        <div class="info-text" style="margin-top:8px;">${escapeHtml(vm.connectionInfo)}</div>
-                        <button class="btn-delete-liquid" onclick="event.stopPropagation(); removeVM('${vm.id}')">🗑️ Xóa VM</button>
+                        <button class="btn-delete" onclick="event.stopPropagation(); removeVM('${vm.id}')">🗑️ Xóa VM</button>
                     </div>
                 </div>
             `;
         }
         container.innerHTML = html;
-        vmDatabase.forEach(vm => updateTimer(vm.id));
+        vmDatabase.forEach(vm => updateTimerUI(vm.id));
     }
 
     function escapeHtml(str) {
@@ -1048,22 +805,22 @@ jobs:
         });
     }
 
-    window.autoSetupAndDeploy = autoSetupAndDeploy;
-    window.runVM = runVM;
-    window.removeVM = removeVM;
-    window.toggleExpand = toggleExpand;
-
-    window.onload = function() {
-        loadVMs();
-        const savedToken = localStorage.getItem('github_token');
+    // Khôi phục dữ liệu
+    window.onload = () => {
+        loadVMFromLocal();
+        const savedToken = localStorage.getItem('gh_token');
         if (savedToken) document.getElementById('github_token').value = savedToken;
-        
         setInterval(() => {
             for (let vm of vmDatabase) {
-                if (getRemainingSeconds(vm) <= 0) removeVM(vm.id);
+                if (getRemainingSec(vm) <= 0) removeVM(vm.id);
             }
         }, 5000);
     };
+
+    window.setupAndDeploy = setupAndDeploy;
+    window.createVM = createVM;
+    window.removeVM = removeVM;
+    window.toggleExpand = toggleExpand;
 </script>
 </body>
 </html>
