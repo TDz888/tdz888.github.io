@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>VPS Glass · iOS 26 Liquid · Xanh Bồng Bềnh</title>
+    <title>🚀 VM GENERATOR · Tạo VPS Miễn Phí</title>
     <style>
         * {
             margin: 0;
@@ -13,197 +13,142 @@
 
         body {
             min-height: 100vh;
-            background: radial-gradient(ellipse at 30% 20%, #0a1628, #030712);
-            font-family: -apple-system, 'SF Pro Display', 'Inter', system-ui, sans-serif;
-            padding: 24px;
-            position: relative;
-            overflow-x: hidden;
-        }
-
-        /* Hiệu ứng bồng bềnh xanh */
-        body::before {
-            content: '';
-            position: fixed;
-            top: -20%;
-            left: -20%;
-            width: 140%;
-            height: 140%;
-            background: radial-gradient(circle at 30% 40%, rgba(0, 200, 255, 0.15), rgba(0, 100, 255, 0.05), transparent 70%);
-            pointer-events: none;
-            animation: floatBlue 18s ease-in-out infinite;
-            z-index: 0;
-        }
-
-        body::after {
-            content: '';
-            position: fixed;
-            bottom: -20%;
-            right: -20%;
-            width: 130%;
-            height: 130%;
-            background: radial-gradient(circle at 70% 80%, rgba(64, 156, 255, 0.12), rgba(0, 200, 255, 0.03), transparent 70%);
-            pointer-events: none;
-            animation: floatBlue2 22s ease-in-out infinite;
-            z-index: 0;
-        }
-
-        @keyframes floatBlue {
-            0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.8; }
-            50% { transform: translate(2%, 2%) scale(1.05); opacity: 1; }
-        }
-
-        @keyframes floatBlue2 {
-            0%, 100% { transform: translate(0, 0) scale(1); }
-            50% { transform: translate(-2%, -3%) scale(1.08); }
+            background: linear-gradient(145deg, #0c0f1c 0%, #0a0d18 100%);
+            font-family: 'Inter', -apple-system, 'Segoe UI', system-ui, sans-serif;
+            padding: 28px 24px;
         }
 
         .container {
-            max-width: 1500px;
+            max-width: 1400px;
             margin: 0 auto;
-            position: relative;
-            z-index: 2;
         }
 
-        /* Header Glass xanh */
-        .glass-header {
+        /* Header */
+        .header {
             text-align: center;
-            margin-bottom: 32px;
-            backdrop-filter: blur(20px) saturate(180%);
-            background: rgba(0, 120, 255, 0.12);
-            border-radius: 80px;
-            padding: 24px 28px;
-            border: 1px solid rgba(0, 160, 255, 0.35);
-            box-shadow: 0 8px 32px rgba(0, 100, 255, 0.15);
+            margin-bottom: 40px;
         }
 
-        .glass-header h1 {
-            font-size: 2.6rem;
-            font-weight: 650;
-            background: linear-gradient(135deg, #FFFFFF, #80D0FF, #2C9EFF);
+        .header h1 {
+            font-size: 2.8rem;
+            background: linear-gradient(135deg, #FFB347, #FF8C00, #FF6B00);
             background-clip: text;
             -webkit-background-clip: text;
             color: transparent;
             letter-spacing: -0.02em;
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
         }
 
-        .glass-header p {
-            color: rgba(128, 200, 255, 0.8);
-            font-size: 0.9rem;
+        .badge {
+            display: inline-block;
+            background: rgba(255, 140, 0, 0.15);
+            padding: 4px 12px;
+            border-radius: 40px;
+            font-size: 0.7rem;
+            color: #FFB347;
             margin-top: 8px;
         }
 
-        /* Layout */
+        /* Layout 2 cột */
         .dashboard {
             display: flex;
-            gap: 24px;
+            gap: 28px;
             flex-wrap: wrap;
         }
 
         .panel-left {
             flex: 1;
-            min-width: 280px;
-        }
-
-        .panel-center {
-            flex: 1.3;
-            min-width: 340px;
+            min-width: 320px;
         }
 
         .panel-right {
-            flex: 1.5;
-            min-width: 400px;
+            flex: 1.8;
+            min-width: 420px;
         }
 
-        /* Card Glass xanh chính */
-        .glass-card {
-            background: rgba(0, 60, 120, 0.25);
-            backdrop-filter: blur(24px) saturate(180%);
-            border-radius: 44px;
-            border: 1px solid rgba(0, 160, 255, 0.3);
-            box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.3), inset 0 0.5px 0 rgba(255, 255, 255, 0.1);
-            transition: all 0.35s cubic-bezier(0.2, 0.9, 0.4, 1.1);
-            margin-bottom: 24px;
-            padding: 26px 24px;
-        }
-
-        .glass-card:hover {
-            background: rgba(0, 80, 140, 0.35);
-            border-color: rgba(0, 200, 255, 0.5);
-            transform: translateY(-2px);
-        }
-
-        .card-header {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 24px;
-        }
-
-        .icon-bg {
-            width: 46px;
-            height: 46px;
-            background: linear-gradient(145deg, #2C8EFF, #0A5ECC);
+        /* Card chính */
+        .card {
+            background: rgba(18, 22, 40, 0.7);
+            backdrop-filter: blur(12px);
             border-radius: 32px;
+            border: 1px solid rgba(255, 140, 0, 0.15);
+            padding: 28px;
+            margin-bottom: 24px;
+            transition: all 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+        }
+
+        .card:hover {
+            border-color: rgba(255, 140, 0, 0.35);
+            box-shadow: 0 8px 28px rgba(0, 0, 0, 0.3);
+        }
+
+        .card-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: #FFD6A5;
+            margin-bottom: 20px;
             display: flex;
             align-items: center;
-            justify-content: center;
-            font-size: 1.4rem;
-            box-shadow: 0 4px 12px rgba(0, 120, 255, 0.4);
+            gap: 10px;
+            border-left: 3px solid #FF8C00;
+            padding-left: 16px;
         }
 
-        .card-header h2 {
-            font-size: 1.5rem;
-            font-weight: 600;
-            color: #E8F4FF;
-        }
-
+        /* Form */
         .form-group {
             margin-bottom: 20px;
         }
 
         label {
             display: block;
-            color: #A8D4FF;
+            color: #B8C4E6;
             font-size: 0.8rem;
             font-weight: 500;
-            margin-bottom: 6px;
+            margin-bottom: 8px;
         }
 
         input, select {
             width: 100%;
-            padding: 14px 20px;
-            background: rgba(0, 20, 50, 0.6);
-            border: 1px solid rgba(0, 140, 255, 0.5);
-            border-radius: 44px;
-            font-size: 0.95rem;
+            padding: 14px 18px;
+            background: rgba(8, 12, 24, 0.8);
+            border: 1px solid rgba(255, 140, 0, 0.3);
+            border-radius: 28px;
+            font-size: 0.9rem;
             color: white;
-            font-weight: 450;
-            transition: all 0.2s ease;
+            transition: all 0.2s;
         }
 
         input:focus, select:focus {
             outline: none;
-            border-color: #3EAEFF;
-            background: rgba(0, 30, 60, 0.8);
-            box-shadow: 0 0 0 3px rgba(62, 174, 255, 0.2);
+            border-color: #FF8C00;
+            box-shadow: 0 0 0 3px rgba(255, 140, 0, 0.15);
         }
 
+        /* Nút bấm mềm mại */
         button {
-            background: linear-gradient(105deg, #2C8EFF, #0A5ECC);
+            background: linear-gradient(105deg, #FF8C00, #E66A00);
             border: none;
-            padding: 14px 24px;
-            border-radius: 48px;
-            font-weight: 620;
-            font-size: 1rem;
+            padding: 14px 20px;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 0.95rem;
             color: white;
             width: 100%;
             cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 6px 18px rgba(0, 120, 255, 0.35);
+            transition: all 0.25s ease;
+            box-shadow: 0 4px 12px rgba(255, 140, 0, 0.25);
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(255, 140, 0, 0.35);
+            background: linear-gradient(105deg, #FF9A20, #FF7700);
         }
 
         button:active {
-            transform: scale(0.97);
+            transform: translateY(1px);
         }
 
         button:disabled {
@@ -212,224 +157,259 @@
         }
 
         .btn-outline {
-            background: rgba(44, 142, 255, 0.2);
-            border: 1px solid rgba(62, 174, 255, 0.6);
+            background: transparent;
+            border: 1px solid rgba(255, 140, 0, 0.5);
             box-shadow: none;
+            color: #FFB347;
         }
 
         .btn-outline:hover {
-            background: rgba(44, 142, 255, 0.35);
+            background: rgba(255, 140, 0, 0.1);
+            transform: translateY(-2px);
         }
 
+        /* Status */
         .status-badge {
             margin-top: 14px;
             padding: 10px 16px;
-            border-radius: 40px;
+            border-radius: 32px;
             display: none;
             font-size: 0.75rem;
-            font-weight: 500;
             text-align: center;
         }
 
         .status-badge.show {
             display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-5px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .status-badge.success {
-            background: rgba(0, 200, 100, 0.15);
-            border: 0.5px solid rgba(0, 230, 120, 0.6);
+            background: rgba(60, 200, 120, 0.15);
+            border: 1px solid rgba(60, 200, 120, 0.5);
             color: #AAFFD0;
         }
 
         .status-badge.error {
             background: rgba(255, 70, 90, 0.15);
-            border: 0.5px solid #FF7070;
+            border: 1px solid #FF7070;
             color: #FFC0C0;
         }
 
         .status-badge.loading {
-            background: rgba(62, 174, 255, 0.15);
-            border: 0.5px solid #3EAEFF;
-            color: #B8E4FF;
+            background: rgba(255, 140, 0, 0.15);
+            border: 1px solid #FFB347;
+            color: #FFE2B5;
         }
 
-        /* VM List */
-        .vm-scroll {
-            max-height: 55vh;
+        /* VM List Grid */
+        .vm-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            max-height: 65vh;
             overflow-y: auto;
             padding-right: 6px;
         }
 
-        .vm-scroll::-webkit-scrollbar {
-            width: 4px;
+        .vm-grid::-webkit-scrollbar {
+            width: 5px;
         }
 
-        .vm-scroll::-webkit-scrollbar-track {
-            background: rgba(0, 160, 255, 0.1);
+        .vm-grid::-webkit-scrollbar-track {
+            background: rgba(255, 140, 0, 0.08);
             border-radius: 10px;
         }
 
-        .vm-scroll::-webkit-scrollbar-thumb {
-            background: #2C8EFF;
+        .vm-grid::-webkit-scrollbar-thumb {
+            background: #FF8C00;
             border-radius: 10px;
         }
 
-        .vm-item {
-            background: rgba(0, 40, 80, 0.5);
-            border-radius: 32px;
-            padding: 16px 20px;
-            margin-bottom: 14px;
+        /* VM Box */
+        .vm-box {
+            background: linear-gradient(135deg, rgba(20, 25, 45, 0.8), rgba(15, 18, 35, 0.9));
+            border-radius: 28px;
+            padding: 20px 24px;
             cursor: pointer;
-            border: 0.5px solid rgba(0, 160, 255, 0.3);
-            transition: all 0.2s;
+            transition: all 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            border: 1px solid rgba(255, 140, 0, 0.2);
         }
 
-        .vm-item:hover {
-            background: rgba(0, 60, 110, 0.6);
-            border-color: #3EAEFF;
-            transform: translateX(4px);
+        .vm-box:hover {
+            transform: translateX(6px);
+            border-color: rgba(255, 140, 0, 0.5);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
         }
 
-        .vm-item.active {
-            border-color: #2C8EFF;
-            background: rgba(44, 142, 255, 0.15);
-            box-shadow: 0 0 12px rgba(44, 142, 255, 0.2);
+        .vm-box.active {
+            border-color: #FF8C00;
+            background: linear-gradient(135deg, rgba(255, 140, 0, 0.12), rgba(20, 25, 45, 0.9));
+            box-shadow: 0 0 0 2px rgba(255, 140, 0, 0.2);
         }
 
         .vm-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 12px;
         }
 
         .vm-name {
-            font-weight: 650;
-            font-size: 1.05rem;
-            background: linear-gradient(120deg, #E8F4FF, #A8D4FF);
+            font-weight: 700;
+            font-size: 1.2rem;
+            background: linear-gradient(135deg, #FFD6A5, #FFB347);
             background-clip: text;
             -webkit-background-clip: text;
             color: transparent;
             display: flex;
             align-items: center;
-            gap: 8px;
-        }
-
-        .vm-timer {
-            font-family: 'SF Mono', monospace;
-            background: rgba(0, 0, 0, 0.4);
-            padding: 4px 12px;
-            border-radius: 30px;
-            font-size: 0.7rem;
-            color: #FFE5A3;
-        }
-
-        .vm-info {
-            font-size: 0.7rem;
-            color: #9CC9FF;
-            margin-bottom: 6px;
-            display: flex;
-            gap: 16px;
-            flex-wrap: wrap;
-        }
-
-        .vm-actions {
-            margin-top: 10px;
-            display: flex;
             gap: 10px;
         }
 
+        .vm-timer {
+            font-family: 'JetBrains Mono', 'SF Mono', monospace;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 5px 14px;
+            border-radius: 40px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #FFE5A3;
+            letter-spacing: 0.5px;
+        }
+
+        .vm-preview {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            font-size: 0.75rem;
+            color: #9CA8D4;
+            margin-bottom: 8px;
+        }
+
+        /* Thông tin chi tiết (hiện khi click) */
+        .vm-details {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s cubic-bezier(0.33, 1, 0.68, 1);
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 24px;
+            margin-top: 0;
+        }
+
+        .vm-box.expanded .vm-details {
+            max-height: 260px;
+            margin-top: 16px;
+            padding: 16px;
+        }
+
+        .detail-row {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 14px;
+            margin-bottom: 10px;
+        }
+
+        .detail-row span {
+            color: #FFB347;
+        }
+
+        .vm-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 12px;
+        }
+
         .btn-sm {
-            background: rgba(44, 142, 255, 0.25);
-            border: 0.5px solid #3EAEFF;
-            padding: 6px 14px;
-            border-radius: 30px;
+            background: rgba(255, 140, 0, 0.2);
+            border: 0.5px solid rgba(255, 140, 0, 0.5);
+            padding: 6px 16px;
+            border-radius: 40px;
             font-size: 0.7rem;
             font-weight: 500;
             width: auto;
             cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-sm:hover {
+            background: rgba(255, 140, 0, 0.35);
+            transform: translateY(-1px);
         }
 
         .btn-sm-danger {
             background: rgba(255, 80, 100, 0.2);
-            border-color: rgba(255, 100, 120, 0.6);
+            border-color: rgba(255, 80, 100, 0.5);
             color: #FFB8C0;
         }
 
-        /* noVNC Container */
-        .novnc-wrapper {
-            background: rgba(0, 0, 0, 0.5);
+        .btn-sm-danger:hover {
+            background: rgba(255, 80, 100, 0.35);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 24px;
+            color: #7A86B0;
+            background: rgba(18, 22, 40, 0.5);
             border-radius: 32px;
-            overflow: hidden;
-            aspect-ratio: 16 / 9;
-            margin-top: 12px;
-            border: 1px solid rgba(0, 160, 255, 0.3);
-        }
-
-        .novnc-wrapper iframe {
-            width: 100%;
-            height: 100%;
-            border: none;
-        }
-
-        .info-panel {
-            background: rgba(0, 30, 60, 0.5);
-            border-radius: 28px;
-            padding: 16px;
-            margin-top: 16px;
-            font-size: 0.75rem;
-            color: #A8D4FF;
-            border: 0.5px solid rgba(0, 160, 255, 0.25);
-        }
-
-        .tailscale-status {
-            font-size: 0.7rem;
-            color: #5EBAFF;
-            margin-top: 10px;
+            border: 1px dashed rgba(255, 140, 0, 0.3);
         }
 
         footer {
             text-align: center;
-            color: #3A6EA5;
-            font-size: 0.7rem;
             margin-top: 32px;
-            padding: 16px;
+            padding: 20px;
+            color: #5A6690;
+            font-size: 0.7rem;
+            border-top: 1px solid rgba(255, 140, 0, 0.1);
         }
 
-        @media (max-width: 1000px) {
+        @media (max-width: 900px) {
+            body {
+                padding: 16px;
+            }
             .dashboard {
                 flex-direction: column;
             }
-            .glass-header h1 {
-                font-size: 1.8rem;
+            .header h1 {
+                font-size: 2rem;
             }
         }
     </style>
 </head>
 <body>
 <div class="container">
-    <div class="glass-header">
-        <h1>🌀 VPS GLASS · iOS 26 Liquid</h1>
-        <p>Xanh bồng bềnh · noVNC · Tailscale · GitHub Actions</p>
+    <div class="header">
+        <h1>🚀 VM GENERATOR 🚀</h1>
+        <div class="badge">⚡ Tạo VPS Miễn Phí · GitHub Actions · noVNC</div>
     </div>
 
     <div class="dashboard">
-        <!-- Cột trái: Cấu hình -->
+        <!-- Cột trái: Tạo VPS -->
         <div class="panel-left">
-            <div class="glass-card">
-                <div class="card-header">
-                    <div class="icon-bg">🔐</div>
-                    <h2>GitHub Token</h2>
+            <div class="card">
+                <div class="card-title">
+                    <span>✨</span> Tạo VPS
                 </div>
-                <input type="password" id="github_token" placeholder="ghp_xxx hoặc github_pat_xxx">
-                <button onclick="setupAndDeploy()" id="setupBtn" style="margin-top: 14px;">✨ Tạo repo + Deploy</button>
+                <div class="form-group">
+                    <label>🔑 GITHUB TOKEN</label>
+                    <input type="password" id="github_token" placeholder="ghp_xxx hoặc github_pat_xxx">
+                </div>
+                <button onclick="setupAndDeploy()" id="setupBtn">🚀 Tạo Repo + Deploy</button>
                 <div id="setupStatus" class="status-badge"></div>
             </div>
 
-            <div class="glass-card">
-                <div class="card-header">
-                    <div class="icon-bg">⚙️</div>
-                    <h2>Cấu hình VM</h2>
+            <div class="card">
+                <div class="card-title">
+                    <span>⚙️</span> Cấu hình VM
                 </div>
                 <div class="form-group">
                     <label>⏱️ Thời gian sống</label>
@@ -437,65 +417,46 @@
                         <option value="60">1 giờ</option>
                         <option value="120" selected>2 giờ</option>
                         <option value="240">4 giờ</option>
-                        <option value="360">6 giờ</option>
+                        <option value="330">5.5 giờ</option>
                     </select>
                 </div>
                 <div class="form-group">
                     <label>💿 Hệ điều hành</label>
                     <select id="target_os">
-                        <option value="windows">🪟 Windows 11 (RDP)</option>
+                        <option value="windows">🪟 Windows Server (GUI + noVNC)</option>
                         <option value="ubuntu">🐧 Ubuntu 22.04 (SSH)</option>
                     </select>
                 </div>
-                <button onclick="createVM()" id="deployBtn">💨 Kích hoạt VM</button>
+                <button onclick="createVM()" id="deployBtn">💨 Tạo VPS Ngay</button>
                 <div id="deployStatus" class="status-badge"></div>
             </div>
 
-            <div class="glass-card">
-                <div class="card-header">
-                    <div class="icon-bg">🔗</div>
-                    <h2>Tailscale</h2>
+            <div class="card">
+                <div class="card-title">
+                    <span>🔄</span> Quản lý
                 </div>
-                <input type="password" id="tailscale_token" placeholder="tskey-auth-xxx">
-                <button onclick="saveTailscaleToken()" class="btn-outline" style="margin-top: 10px;">💾 Lưu token</button>
-                <div class="tailscale-status" id="tailscaleStatus"></div>
-                <div class="info-panel" style="margin-top: 16px;">
-                    📌 <strong>Tailscale Auth Key</strong><br>
-                    Lấy tại <a href="https://login.tailscale.com/admin/settings/keys" target="_blank" style="color:#5EBAFF;">tailscale.com/admin/settings/keys</a>
-                </div>
+                <button onclick="refreshVMList()" class="btn-outline" id="refreshBtn">🔄 Làm mới danh sách</button>
             </div>
         </div>
 
-        <!-- Cột giữa: Danh sách VM -->
-        <div class="panel-center">
-            <div class="glass-card">
-                <div class="card-header">
-                    <div class="icon-bg">🖥️</div>
-                    <h2>Máy chủ đang chạy</h2>
-                </div>
-                <div id="vmList" class="vm-scroll">
-                    <div style="text-align:center; padding:50px 20px; color:#6CA6D0;">✨ Chưa có VM nào<br>Bấm "Tạo repo + Deploy" để bắt đầu</div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Cột phải: noVNC -->
+        <!-- Cột phải: Danh sách VM -->
         <div class="panel-right">
-            <div class="glass-card">
-                <div class="card-header">
-                    <div class="icon-bg">🖥️</div>
-                    <h2>noVNC · Remote Desktop</h2>
+            <div class="card">
+                <div class="card-title">
+                    <span>📡</span> Danh sách VPS đang chạy
                 </div>
-                <div class="novnc-wrapper" id="novncWrapper">
-                    <div style="display:flex; align-items:center; justify-content:center; height:100%; background:#030e1a; color:#4A90C4;">
-                        ⚡ Chọn một VM để xem màn hình
+                <div id="vmListContainer" class="vm-grid">
+                    <div class="empty-state">
+                        ✨ Chưa có VPS nào<br>
+                        Nhấn "Tạo Repo + Deploy" để bắt đầu
                     </div>
                 </div>
-                <div class="info-panel" id="rdpGuide" style="display:none;"></div>
             </div>
         </div>
     </div>
-    <footer>Liquid Glass Engine · Xanh bồng bềnh · Tự động thu hồi sau hết giờ</footer>
+    <footer>
+        Developed by <strong style="color:#FFB347;">TDz888</strong> · Based on DuckNoVis Technology · Tự động thu hồi sau hết giờ
+    </footer>
 </div>
 
 <script>
@@ -514,24 +475,21 @@
     }
 
     async function callApi(endpoint, data) {
-        const res = await fetch(`${API_BASE}/${endpoint}`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(data)
-        });
-        return res.json();
+        try {
+            const res = await fetch(`${API_BASE}/${endpoint}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+            return await res.json();
+        } catch (err) {
+            return { error: err.message };
+        }
     }
 
-    function saveTailscaleToken() {
-        const token = document.getElementById('tailscale_token').value.trim();
-        if (token) {
-            localStorage.setItem('tailscale_token', token);
-            const st = document.getElementById('tailscaleStatus');
-            st.innerHTML = '✅ Đã lưu token Tailscale';
-            setTimeout(() => st.innerHTML = '', 3000);
-        } else {
-            alert('Vui lòng nhập Tailscale auth key');
-        }
+    function refreshVMList() {
+        renderVMList();
+        showStatus('setupStatus', 'Đã làm mới danh sách', 'success');
     }
 
     // ======================= GITHUB API =======================
@@ -542,7 +500,7 @@
             return;
         }
 
-        showStatus('setupStatus', '🔄 Đang kiểm tra token...', 'loading');
+        showStatus('setupStatus', '🔄 Đang kiểm tra token và tạo repo...', 'loading');
         document.getElementById('setupBtn').disabled = true;
 
         try {
@@ -571,7 +529,7 @@
         if (!token || !owner || !repo) {
             const freshToken = document.getElementById('github_token').value.trim();
             if (!freshToken) {
-                alert('Cần nhập GitHub Token và chạy "Tạo repo + Deploy" trước');
+                alert('Cần nhập GitHub Token và chạy "Tạo Repo + Deploy" trước');
                 return;
             }
             await setupAndDeploy();
@@ -580,18 +538,17 @@
         
         const duration = document.getElementById('duration').value;
         const target_os = document.getElementById('target_os').value;
-        const tailscale_token = localStorage.getItem('tailscale_token') || '';
         
-        showStatus('deployStatus', '🚀 Đang gửi yêu cầu tạo VM...', 'loading');
+        showStatus('deployStatus', '🚀 Đang gửi yêu cầu tạo VPS...', 'loading');
         document.getElementById('deployBtn').disabled = true;
         
         try {
             const result = await callApi('deploy-vm', {
-                token, owner, repo, duration, target_os, tailscale_token
+                token, owner, repo, duration, target_os, tailscale_token: ''
             });
             if (result.error) throw new Error(result.error);
             
-            const osName = target_os === 'windows' ? 'Windows 11' : 'Ubuntu 22.04';
+            const osName = target_os === 'windows' ? 'Windows Server' : 'Ubuntu 22.04';
             addVM({
                 name: osName,
                 ip: 'Đang khởi tạo...',
@@ -600,7 +557,7 @@
                 duration: parseInt(duration)
             });
             
-            showStatus('deployStatus', '✅ VM đang được tạo (2-3 phút sau có thông tin)', 'success');
+            showStatus('deployStatus', '✅ VPS đang được tạo (2-3 phút sau có thông tin)', 'success');
             
         } catch (err) {
             showStatus('deployStatus', `❌ Lỗi: ${err.message}`, 'error');
@@ -619,7 +576,7 @@
             password: vm.pass,
             durationMinutes: vm.duration,
             createdAt: Date.now(),
-            novncUrl: ''
+            expanded: false
         };
         vmDatabase.push(newVM);
         saveVMToLocal();
@@ -629,55 +586,18 @@
 
     function removeVM(id) {
         vmDatabase = vmDatabase.filter(v => v.id !== id);
-        if (activeVMId === id) {
-            activeVMId = null;
-            document.getElementById('novncWrapper').innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100%;background:#030e1a;color:#4A90C4;">⚡ Chọn VM để xem màn hình</div>';
-            document.getElementById('rdpGuide').style.display = 'none';
-        }
+        if (activeVMId === id) activeVMId = null;
         saveVMToLocal();
         renderVMList();
     }
 
-    function connectToVM(id) {
-        const vm = vmDatabase.find(v => v.id === id);
-        if (!vm) return;
-        activeVMId = id;
-        
-        const novncDiv = document.getElementById('novncWrapper');
-        if (vm.novncUrl && vm.novncUrl !== '') {
-            novncDiv.innerHTML = `<iframe src="${vm.novncUrl}"></iframe>`;
-        } else {
-            novncDiv.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100%;background:#030e1a;color:#FFCC66;">⏳ Đang chờ noVNC từ VM...</div>';
-        }
-        
-        const guide = document.getElementById('rdpGuide');
-        if (vm.ip && vm.ip !== 'Đang khởi tạo...') {
-            guide.style.display = 'block';
-            const isWin = vm.name.includes('Windows');
-            guide.innerHTML = `🔌 <strong>Thông tin kết nối</strong><br>
-            • IP: <code style="background:#0A2A4A; padding:2px 6px; border-radius:8px;">${vm.ip}</code><br>
-            • Port: <code>${isWin ? '3389 (RDP)' : '22 (SSH)'}</code><br>
-            • User: <code>${vm.user}</code><br>
-            • Password: <code>${vm.password}</code><br>
-            ${localStorage.getItem('tailscale_token') ? '• Tailscale: Đã cài đặt, dùng IP Tailscale để kết nối an toàn' : ''}`;
-        } else {
-            guide.style.display = 'block';
-            guide.innerHTML = '⏳ Đang chờ VM khởi tạo... Thông tin sẽ cập nhật sau 2-3 phút.';
-        }
-        
-        renderVMList();
-    }
-
-    function updateVMInfo(id, ip, user, pass, novncUrl) {
+    function toggleExpand(id) {
         const vm = vmDatabase.find(v => v.id === id);
         if (vm) {
-            if (ip) vm.ip = ip;
-            if (user) vm.user = user;
-            if (pass) vm.password = pass;
-            if (novncUrl) vm.novncUrl = novncUrl;
-            saveVMToLocal();
+            vm.expanded = !vm.expanded;
+            if (vm.expanded) activeVMId = id;
+            else if (activeVMId === id) activeVMId = null;
             renderVMList();
-            if (activeVMId === id) connectToVM(id);
         }
     }
 
@@ -692,9 +612,14 @@
         const h = Math.floor(sec / 3600);
         const m = Math.floor((sec % 3600) / 60);
         const s = Math.floor(sec % 60);
-        if (h > 0) return `${h}h ${m}m`;
+        if (h > 0) return `${h}h ${m}m ${s}s`;
         if (m > 0) return `${m}m ${s}s`;
         return `${s}s`;
+    }
+
+    function formatDate(timestamp) {
+        const d = new Date(timestamp);
+        return d.toLocaleString('vi-VN');
     }
 
     function updateTimerUI(id) {
@@ -719,16 +644,17 @@
     function saveVMToLocal() {
         const toStore = vmDatabase.map(v => ({
             id: v.id, name: v.name, ip: v.ip, user: v.user, password: v.password,
-            durationMinutes: v.durationMinutes, createdAt: v.createdAt, novncUrl: v.novncUrl
+            durationMinutes: v.durationMinutes, createdAt: v.createdAt, expanded: false
         }));
-        localStorage.setItem('vpsglass_vms', JSON.stringify(toStore));
+        localStorage.setItem('vmgenerator_vms', JSON.stringify(toStore));
     }
 
     function loadVMFromLocal() {
-        const stored = localStorage.getItem('vpsglass_vms');
+        const stored = localStorage.getItem('vmgenerator_vms');
         if (stored) {
             try {
                 vmDatabase = JSON.parse(stored);
+                vmDatabase.forEach(v => { v.expanded = false; });
                 renderVMList();
                 vmDatabase.forEach(v => startTimerForVM(v.id));
             } catch(e) { vmDatabase = []; }
@@ -736,37 +662,63 @@
     }
 
     function renderVMList() {
-        const container = document.getElementById('vmList');
+        const container = document.getElementById('vmListContainer');
         if (!container) return;
+        
         if (vmDatabase.length === 0) {
-            container.innerHTML = '<div style="text-align:center; padding:50px 20px; color:#6CA6D0;">✨ Chưa có VM nào<br>Bấm "Tạo repo + Deploy" để bắt đầu</div>';
+            container.innerHTML = '<div class="empty-state">✨ Chưa có VPS nào<br>Nhấn "Tạo Repo + Deploy" để bắt đầu</div>';
             return;
         }
+        
         let html = '';
         for (let vm of vmDatabase) {
+            const isWin = vm.name.includes('Windows');
+            const expandedClass = vm.expanded ? 'expanded' : '';
             const isActive = (activeVMId === vm.id);
-            const activeClass = isActive ? 'active' : '';
+            
             html += `
-                <div class="vm-item ${activeClass}" onclick="connectToVM('${vm.id}')">
+                <div class="vm-box ${expandedClass} ${isActive ? 'active' : ''}" onclick="toggleExpand('${vm.id}')">
                     <div class="vm-header">
                         <div class="vm-name">
-                            <span>${vm.name === 'Windows 11' ? '🪟' : '🐧'}</span> ${escapeHtml(vm.name)}
+                            <span>${isWin ? '🪟' : '🐧'}</span> ${escapeHtml(vm.name)}
                         </div>
                         <div class="vm-timer" id="timer-${vm.id}">${formatTime(getRemainingSec(vm))}</div>
                     </div>
-                    <div class="vm-info">
-                        <span>🌍 ${escapeHtml(vm.ip)}</span>
-                        <span>👤 ${escapeHtml(vm.user)}</span>
+                    <div class="vm-preview">
+                        <span>🌍 IP: ${escapeHtml(vm.ip)}</span>
+                        <span>👤 User: ${escapeHtml(vm.user)}</span>
                     </div>
-                    <div class="vm-actions">
-                        <button class="btn-sm" onclick="event.stopPropagation(); connectToVM('${vm.id}')">🔌 Kết nối</button>
-                        <button class="btn-sm btn-sm-danger" onclick="event.stopPropagation(); removeVM('${vm.id}')">🗑️ Xóa</button>
+                    <div class="vm-details">
+                        <div class="detail-row">
+                            <div>🔗 IP: <span>${escapeHtml(vm.ip)}</span></div>
+                            <div>🔌 Port: <span>${isWin ? '3389 (RDP) / 6080 (noVNC)' : '22 (SSH)'}</span></div>
+                        </div>
+                        <div class="detail-row">
+                            <div>👤 Username: <span>${escapeHtml(vm.user)}</span></div>
+                            <div>🔑 Password: <span>${escapeHtml(vm.password)}</span></div>
+                        </div>
+                        <div class="detail-row">
+                            <div>⏰ Thời gian tạo: <span>${formatDate(vm.createdAt)}</span></div>
+                            <div>⏱️ Hết hạn sau: <span>${formatTime(getRemainingSec(vm))}</span></div>
+                        </div>
+                        <div class="vm-actions">
+                            <button class="btn-sm" onclick="event.stopPropagation(); copyInfo('${vm.id}')">📋 Copy thông tin</button>
+                            <button class="btn-sm btn-sm-danger" onclick="event.stopPropagation(); removeVM('${vm.id}')">🗑️ Xóa VPS</button>
+                        </div>
                     </div>
                 </div>
             `;
         }
         container.innerHTML = html;
         vmDatabase.forEach(vm => updateTimerUI(vm.id));
+    }
+
+    function copyInfo(id) {
+        const vm = vmDatabase.find(v => v.id === id);
+        if (!vm) return;
+        const info = `IP: ${vm.ip}\nUser: ${vm.user}\nPassword: ${vm.password}\nPort: ${vm.name.includes('Windows') ? '3389' : '22'}`;
+        navigator.clipboard.writeText(info);
+        showStatus('deployStatus', '📋 Đã copy thông tin kết nối', 'success');
     }
 
     function escapeHtml(str) {
@@ -784,8 +736,6 @@
         loadVMFromLocal();
         const savedToken = localStorage.getItem('gh_token');
         if (savedToken) document.getElementById('github_token').value = savedToken;
-        const savedTailscale = localStorage.getItem('tailscale_token');
-        if (savedTailscale) document.getElementById('tailscale_token').value = savedTailscale;
         
         setInterval(() => {
             for (let vm of vmDatabase) {
@@ -797,8 +747,9 @@
     window.setupAndDeploy = setupAndDeploy;
     window.createVM = createVM;
     window.removeVM = removeVM;
-    window.connectToVM = connectToVM;
-    window.saveTailscaleToken = saveTailscaleToken;
+    window.toggleExpand = toggleExpand;
+    window.refreshVMList = refreshVMList;
+    window.copyInfo = copyInfo;
 </script>
 </body>
 </html>
