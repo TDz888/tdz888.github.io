@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>VPS Glass · iOS 26 Liquid Edition</title>
+    <title>VPS Glass · noVNC + Tailscale · iOS 26 Liquid</title>
     <style>
         * {
             margin: 0;
@@ -13,14 +13,14 @@
 
         body {
             min-height: 100vh;
-            background: radial-gradient(ellipse at 30% 20%, #1a1f2e, #070a12);
+            background: radial-gradient(ellipse at 30% 20%, #0f1422, #05070d);
             font-family: -apple-system, 'SF Pro Display', 'Inter', system-ui, sans-serif;
             padding: 20px;
             position: relative;
             overflow-x: hidden;
         }
 
-        /* Animated background hoa thị - hiệu ứng bồng bềnh */
+        /* Hiệu ứng bồng bềnh */
         body::before {
             content: '';
             position: fixed;
@@ -28,9 +28,9 @@
             left: -20%;
             width: 150%;
             height: 150%;
-            background: radial-gradient(circle at 30% 40%, rgba(80, 140, 255, 0.15), transparent 65%);
+            background: radial-gradient(circle at 30% 40%, rgba(80, 140, 255, 0.12), transparent 65%);
             pointer-events: none;
-            animation: floatLiquid 22s ease-in-out infinite;
+            animation: floatLiquid 20s ease-in-out infinite;
             z-index: 0;
         }
 
@@ -43,159 +43,148 @@
             height: 130%;
             background: radial-gradient(circle at 70% 80%, rgba(160, 100, 255, 0.1), transparent 70%);
             pointer-events: none;
-            animation: floatLiquid2 28s ease-in-out infinite;
+            animation: floatLiquid2 25s ease-in-out infinite;
             z-index: 0;
         }
 
         @keyframes floatLiquid {
-            0%, 100% { transform: translate(0, 0) scale(1) rotate(0deg); }
-            50% { transform: translate(4%, 3%) scale(1.05) rotate(2deg); }
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(3%, 2%) scale(1.03); }
         }
 
         @keyframes floatLiquid2 {
-            0%, 100% { transform: translate(0, 0) scale(1); }
-            50% { transform: translate(-3%, -4%) scale(1.08) rotate(-2deg); }
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(-2%, -3%) scale(1.04); }
         }
 
         .container {
-            max-width: 1400px;
+            max-width: 1500px;
             margin: 0 auto;
             position: relative;
             z-index: 2;
         }
 
-        /* Header kính mờ */
+        /* Glass Header */
         .glass-header {
             text-align: center;
-            margin-bottom: 36px;
-            backdrop-filter: blur(24px) saturate(180%);
+            margin-bottom: 30px;
+            backdrop-filter: blur(24px);
             background: rgba(20, 28, 48, 0.35);
-            border-radius: 80px;
-            padding: 24px 20px;
+            border-radius: 70px;
+            padding: 20px;
             border: 0.5px solid rgba(255, 255, 255, 0.2);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
         }
 
         .glass-header h1 {
-            font-size: 2.8rem;
-            font-weight: 650;
-            background: linear-gradient(135deg, #F5F9FF, #B0D4FF, #7AB0FF);
+            font-size: 2.5rem;
+            background: linear-gradient(135deg, #F5F9FF, #7AB0FF);
             background-clip: text;
             -webkit-background-clip: text;
             color: transparent;
-            letter-spacing: -0.02em;
         }
 
         .glass-header p {
-            color: rgba(200, 215, 250, 0.75);
-            font-size: 0.9rem;
-            margin-top: 8px;
+            color: rgba(200, 215, 250, 0.7);
+            font-size: 0.85rem;
         }
 
-        /* Layout 2 cột */
+        /* Layout 3 cột mới: Left config, Middle VM list, Right noVNC */
         .dashboard {
             display: flex;
-            gap: 28px;
+            gap: 20px;
             flex-wrap: wrap;
         }
 
-        .panel-left {
-            flex: 1.1;
+        .panel-config {
+            flex: 1;
+            min-width: 280px;
+        }
+
+        .panel-vms {
+            flex: 1.2;
             min-width: 320px;
         }
 
-        .panel-right {
-            flex: 1.9;
-            min-width: 420px;
+        .panel-novnc {
+            flex: 1.5;
+            min-width: 400px;
         }
 
-        /* Card chính - hiệu ứng kính */
+        /* Glass Card */
         .glass-card {
-            background: rgba(18, 26, 46, 0.45);
-            backdrop-filter: blur(28px) saturate(180%);
-            border-radius: 44px;
-            border: 0.8px solid rgba(255, 255, 255, 0.18);
-            box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.4), inset 0 0.5px 0 rgba(255, 255, 255, 0.08);
-            transition: all 0.35s cubic-bezier(0.2, 0.9, 0.4, 1.1);
-            margin-bottom: 24px;
-            padding: 28px 26px;
+            background: rgba(18, 26, 46, 0.5);
+            backdrop-filter: blur(28px);
+            border-radius: 40px;
+            border: 0.8px solid rgba(255, 255, 255, 0.15);
+            padding: 24px;
+            margin-bottom: 20px;
+            transition: all 0.3s;
         }
 
         .glass-card:hover {
-            background: rgba(28, 38, 60, 0.55);
-            border-color: rgba(255, 255, 255, 0.28);
-            transform: translateY(-2px);
+            background: rgba(28, 38, 60, 0.6);
+            border-color: rgba(255, 255, 255, 0.25);
         }
 
         .card-header {
             display: flex;
             align-items: center;
             gap: 12px;
-            margin-bottom: 28px;
+            margin-bottom: 22px;
         }
 
-        .card-header .icon-bg {
-            width: 48px;
-            height: 48px;
+        .icon-bg {
+            width: 44px;
+            height: 44px;
             background: linear-gradient(145deg, #2C6EFF, #1A4FCC);
             border-radius: 30px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.5rem;
-            box-shadow: 0 8px 18px rgba(44, 110, 255, 0.3);
+            font-size: 1.3rem;
         }
 
         .card-header h2 {
-            font-size: 1.6rem;
-            font-weight: 600;
+            font-size: 1.4rem;
             color: #EEF3FF;
         }
 
         .form-group {
-            margin-bottom: 22px;
+            margin-bottom: 18px;
         }
 
         label {
             display: block;
-            color: #C5D6FF;
-            font-size: 0.85rem;
-            font-weight: 510;
-            margin-bottom: 8px;
-            letter-spacing: -0.2px;
+            color: #B8CCFF;
+            font-size: 0.8rem;
+            margin-bottom: 6px;
         }
 
         input, select {
             width: 100%;
-            padding: 14px 20px;
-            background: rgba(6, 12, 24, 0.7);
+            padding: 12px 18px;
+            background: rgba(6, 12, 24, 0.8);
             border: 1px solid rgba(100, 140, 220, 0.5);
-            border-radius: 40px;
-            font-size: 0.95rem;
+            border-radius: 36px;
+            font-size: 0.9rem;
             color: white;
-            font-weight: 460;
-            transition: all 0.2s ease;
         }
 
         input:focus, select:focus {
             outline: none;
             border-color: #5E9CFF;
-            background: rgba(12, 20, 36, 0.9);
-            box-shadow: 0 0 0 4px rgba(94, 156, 255, 0.15);
         }
 
         button {
             background: linear-gradient(105deg, #2C6EFF, #1A4FCC);
             border: none;
-            padding: 14px 24px;
-            border-radius: 48px;
-            font-weight: 620;
-            font-size: 1rem;
+            padding: 12px 20px;
+            border-radius: 44px;
+            font-weight: 600;
             color: white;
             width: 100%;
             cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 6px 18px rgba(44, 110, 255, 0.35);
+            transition: all 0.2s;
         }
 
         button:active {
@@ -203,17 +192,15 @@
         }
 
         button:disabled {
-            opacity: 0.55;
-            transform: none;
+            opacity: 0.5;
         }
 
         .status-badge {
-            margin-top: 16px;
-            padding: 12px 18px;
-            border-radius: 40px;
+            margin-top: 12px;
+            padding: 10px;
+            border-radius: 32px;
             display: none;
-            font-size: 0.8rem;
-            font-weight: 500;
+            font-size: 0.75rem;
             text-align: center;
         }
 
@@ -223,7 +210,7 @@
 
         .status-badge.success {
             background: rgba(60, 200, 120, 0.2);
-            border: 0.5px solid rgba(80, 230, 140, 0.7);
+            border: 0.5px solid #80EEA0;
             color: #C0FFE0;
         }
 
@@ -239,126 +226,103 @@
             color: #FFE2B5;
         }
 
-        /* Danh sách VM */
-        .vm-grid {
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-            max-height: 65vh;
+        /* VM List */
+        .vm-scroll {
+            max-height: 55vh;
             overflow-y: auto;
-            padding-right: 6px;
+            padding-right: 5px;
         }
 
-        .vm-grid::-webkit-scrollbar {
+        .vm-scroll::-webkit-scrollbar {
             width: 4px;
         }
 
-        .vm-grid::-webkit-scrollbar-track {
-            background: rgba(255,255,255,0.05);
+        .vm-scroll::-webkit-scrollbar-thumb {
+            background: #5E9CFF;
             border-radius: 10px;
         }
 
-        .vm-grid::-webkit-scrollbar-thumb {
-            background: rgba(94,156,255,0.5);
-            border-radius: 10px;
-        }
-
-        .vm-card {
-            background: rgba(12, 20, 36, 0.65);
-            backdrop-filter: blur(20px);
-            border-radius: 36px;
-            padding: 20px 24px;
-            border: 0.5px solid rgba(255, 255, 255, 0.15);
-            transition: all 0.3s;
+        .vm-item {
+            background: rgba(10, 16, 30, 0.7);
+            border-radius: 28px;
+            padding: 14px 18px;
+            margin-bottom: 12px;
             cursor: pointer;
+            border: 0.5px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.2s;
         }
 
-        .vm-card:hover {
-            background: rgba(24, 34, 54, 0.75);
-            border-color: rgba(100, 160, 255, 0.5);
-            transform: translateX(5px);
+        .vm-item:hover {
+            background: rgba(20, 30, 50, 0.8);
+            border-color: #5E9CFF;
         }
 
-        .vm-header {
+        .vm-item.active {
+            border-color: #2C6EFF;
+            background: rgba(44, 110, 255, 0.15);
+        }
+
+        .vm-name {
+            font-weight: 600;
+            font-size: 1rem;
+            color: #D0E6FF;
             display: flex;
             justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            margin-bottom: 12px;
-        }
-
-        .vm-os {
-            font-weight: 650;
-            font-size: 1.2rem;
-            background: linear-gradient(120deg, #F0F5FF, #B8D0FF);
-            background-clip: text;
-            -webkit-background-clip: text;
-            color: transparent;
-            display: flex;
-            align-items: center;
-            gap: 8px;
         }
 
         .vm-timer {
             font-family: monospace;
-            background: rgba(0, 0, 0, 0.5);
-            padding: 5px 14px;
-            border-radius: 40px;
-            font-size: 0.8rem;
-            font-weight: 500;
+            font-size: 0.7rem;
             color: #FFE5A3;
         }
 
         .vm-info {
+            font-size: 0.7rem;
+            color: #8A9FD0;
+            margin-top: 6px;
             display: flex;
-            gap: 20px;
-            flex-wrap: wrap;
-            font-size: 0.75rem;
-            color: #A0B5E0;
-            margin-bottom: 8px;
-        }
-
-        .vm-detail {
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.4s;
-            background: rgba(0, 0, 0, 0.3);
-            border-radius: 28px;
-            margin-top: 0;
-        }
-
-        .vm-card.expanded .vm-detail {
-            max-height: 220px;
-            margin-top: 14px;
-            padding: 14px;
-        }
-
-        .detail-row {
-            font-family: monospace;
-            font-size: 0.75rem;
-            display: flex;
-            flex-wrap: wrap;
             gap: 12px;
+            flex-wrap: wrap;
         }
 
-        .btn-delete {
-            background: rgba(255, 100, 100, 0.2);
-            border: 0.5px solid rgba(255, 120, 120, 0.6);
-            color: #FFB7B7;
-            padding: 6px 16px;
-            border-radius: 50px;
+        .btn-connect {
+            background: rgba(44, 110, 255, 0.3);
+            border: 0.5px solid #5E9CFF;
+            padding: 6px 12px;
+            border-radius: 30px;
             font-size: 0.7rem;
             width: auto;
-            cursor: pointer;
+            margin-top: 8px;
+        }
+
+        /* noVNC iframe */
+        .novnc-container {
+            background: #000;
+            border-radius: 28px;
+            overflow: hidden;
+            aspect-ratio: 16 / 9;
             margin-top: 12px;
         }
 
-        .empty-state {
-            text-align: center;
-            padding: 50px 20px;
-            color: #8A9FD0;
-            background: rgba(0, 0, 0, 0.2);
-            border-radius: 48px;
+        .novnc-container iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .connect-guide {
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 24px;
+            padding: 16px;
+            margin-top: 16px;
+            font-size: 0.75rem;
+            color: #A0B5E0;
+        }
+
+        .tailscale-status {
+            font-size: 0.7rem;
+            color: #7AB0FF;
+            margin-top: 8px;
         }
 
         footer {
@@ -366,15 +330,11 @@
             color: #5A6E96;
             font-size: 0.7rem;
             margin-top: 30px;
-            padding: 20px;
         }
 
-        @media (max-width: 900px) {
+        @media (max-width: 1000px) {
             .dashboard {
                 flex-direction: column;
-            }
-            .glass-header h1 {
-                font-size: 2rem;
             }
         }
     </style>
@@ -382,29 +342,27 @@
 <body>
 <div class="container">
     <div class="glass-header">
-        <h1>🧊 VPS GLASS · iOS 26</h1>
-        <p>Liquid Metal · Tự động sinh GitHub VPS · Bồng bềnh như mây</p>
+        <h1>🧊 VPS GLASS · iOS 26 Liquid</h1>
+        <p>noVNC · Tailscale · RDP · Bồng bềnh như mây</p>
     </div>
 
     <div class="dashboard">
-        <div class="panel-left">
+        <!-- Cột trái: Cấu hình -->
+        <div class="panel-config">
             <div class="glass-card">
                 <div class="card-header">
                     <div class="icon-bg">🔐</div>
-                    <h2>Khởi tạo nền tảng</h2>
+                    <h2>GitHub Token</h2>
                 </div>
-                <div class="form-group">
-                    <label>🍃 GitHub Token</label>
-                    <input type="password" id="github_token" placeholder="ghp_xxxx hoặc github_pat_xxxx">
-                </div>
-                <button onclick="setupAndDeploy()" id="setupBtn">✨ Tự động tạo repo + Deploy VM</button>
+                <input type="password" id="github_token" placeholder="ghp_xxx hoặc github_pat_xxx">
+                <button onclick="setupAndDeploy()" id="setupBtn" style="margin-top: 16px;">✨ Tạo repo + Deploy</button>
                 <div id="setupStatus" class="status-badge"></div>
             </div>
 
             <div class="glass-card">
                 <div class="card-header">
                     <div class="icon-bg">⚙️</div>
-                    <h2>Cấu hình máy chủ</h2>
+                    <h2>Tạo VM mới</h2>
                 </div>
                 <div class="form-group">
                     <label>⏱️ Thời gian sống</label>
@@ -418,36 +376,75 @@
                 <div class="form-group">
                     <label>💿 Hệ điều hành</label>
                     <select id="target_os">
-                        <option value="windows">🪟 Windows 11</option>
-                        <option value="ubuntu">🐧 Ubuntu 22.04</option>
-                        <option value="debian">📀 Debian 12</option>
+                        <option value="windows">🪟 Windows 11 (RDP)</option>
+                        <option value="ubuntu">🐧 Ubuntu 22.04 (SSH)</option>
                     </select>
                 </div>
-                <button onclick="createVM()" id="deployBtn">💨 Kích hoạt VM Glass</button>
+                <button onclick="createVM()" id="deployBtn">💨 Tạo VM ngay</button>
                 <div id="deployStatus" class="status-badge"></div>
+            </div>
+
+            <div class="glass-card">
+                <div class="card-header">
+                    <div class="icon-bg">🔗</div>
+                    <h2>Tailscale (RDP/SSH)</h2>
+                </div>
+                <input type="password" id="tailscale_token" placeholder="tskey-auth-xxx">
+                <button onclick="saveTailscaleToken()" class="btn-outline" style="margin-top: 12px;">💾 Lưu token</button>
+                <div class="tailscale-status" id="tailscaleStatus"></div>
+                <div class="connect-guide">
+                    📌 <strong>Cách lấy Tailscale token:</strong><br>
+                    1. Đăng nhập <a href="https://login.tailscale.com" target="_blank" style="color:#7AB0FF;">tailscale.com</a><br>
+                    2. Vào Settings → Keys → Generate auth key<br>
+                    3. Copy key dạng <code>tskey-auth-xxx</code>
+                </div>
             </div>
         </div>
 
-        <div class="panel-right">
+        <!-- Cột giữa: Danh sách VM -->
+        <div class="panel-vms">
             <div class="glass-card">
                 <div class="card-header">
                     <div class="icon-bg">🖥️</div>
-                    <h2>Máy chủ đang bay</h2>
+                    <h2>Máy chủ đang chạy</h2>
                 </div>
-                <div id="vmList" class="vm-grid">
-                    <div class="empty-state">✨ Chưa có VM nào<br>Bấm "Tự động tạo repo + Deploy VM"</div>
+                <div id="vmList" class="vm-scroll">
+                    <div style="text-align:center; padding:40px; color:#8A9FD0;">✨ Chưa có VM nào</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Cột phải: noVNC -->
+        <div class="panel-novnc">
+            <div class="glass-card">
+                <div class="card-header">
+                    <div class="icon-bg">🖥️</div>
+                    <h2>noVNC · Xem màn hình</h2>
+                </div>
+                <div class="novnc-container" id="novncContainer">
+                    <div style="display:flex; align-items:center; justify-content:center; height:100%; background:#0a0e1a; color:#6c7a9e;">
+                        ⚡ Chọn một VM để kết nối noVNC
+                    </div>
+                </div>
+                <div class="connect-guide" id="rdpGuide" style="display:none;">
+                    🔌 <strong>Kết nối RDP qua Tailscale:</strong><br>
+                    - Cài Tailscale trên máy tính của bạn<br>
+                    - Chạy: <code>tailscale up</code><br>
+                    - RDP vào IP Tailscale của VM<br>
+                    - Dùng user/password hiển thị bên cạnh
                 </div>
             </div>
         </div>
     </div>
-    <footer>Liquid Glass Engine · GitHub Actions Runner · Tự động thu hồi</footer>
+    <footer>Liquid Glass Engine · noVNC + Tailscale · GitHub Actions</footer>
 </div>
 
 <script>
-    // ======================= QUẢN LÝ VM ẢO (HIỂN THỊ) =======================
+    // ======================= QUẢN LÝ VM =======================
     let vmDatabase = [];
     let currentOwner = '';
     let currentRepo = '';
+    let activeVMId = null;
 
     function showStatus(elementId, msg, type) {
         const el = document.getElementById(elementId);
@@ -461,9 +458,22 @@
         const res = await fetch('https://api.github.com/user', {
             headers: { 'Authorization': `Bearer ${token}` }
         });
-        if (!res.ok) throw new Error('Token không hợp lệ');
+        if (!res.ok) throw new Error('Token GitHub không hợp lệ');
         const data = await res.json();
         return data.login;
+    }
+
+    function saveTailscaleToken() {
+        const token = document.getElementById('tailscale_token').value.trim();
+        if (token) {
+            localStorage.setItem('tailscale_token', token);
+            document.getElementById('tailscaleStatus').innerHTML = '✅ Đã lưu token Tailscale';
+            setTimeout(() => {
+                document.getElementById('tailscaleStatus').innerHTML = '';
+            }, 3000);
+        } else {
+            alert('Vui lòng nhập Tailscale auth key');
+        }
     }
 
     async function setupAndDeploy() {
@@ -473,7 +483,7 @@
             return;
         }
 
-        showStatus('setupStatus', '🔄 Đang kiểm tra token...', 'loading');
+        showStatus('setupStatus', 'Đang kiểm tra token...', 'loading');
         document.getElementById('setupBtn').disabled = true;
 
         try {
@@ -482,9 +492,8 @@
             currentOwner = owner;
             currentRepo = repoName;
 
-            showStatus('setupStatus', `📦 Đang tạo repo: ${repoName}...`, 'loading');
+            showStatus('setupStatus', `Đang tạo repo: ${repoName}...`, 'loading');
 
-            // Tạo repo thật
             const createRepo = await fetch('https://api.github.com/user/repos', {
                 method: 'POST',
                 headers: {
@@ -494,32 +503,31 @@
                 body: JSON.stringify({
                     name: repoName,
                     private: false,
-                    auto_init: true,
-                    description: 'VPS Glass by Liquid Engine'
+                    auto_init: true
                 })
             });
 
-            if (!createRepo.ok) {
-                const err = await createRepo.json();
-                throw new Error(err.message || 'Tạo repo thất bại');
-            }
+            if (!createRepo.ok) throw new Error('Tạo repo thất bại');
 
-            showStatus('setupStatus', '📤 Đang upload workflow...', 'loading');
+            showStatus('setupStatus', 'Đang upload workflow...', 'loading');
 
-            // Nội dung workflow YAML (backend thực sự)
-            const workflowYAML = `name: VPS Glass Deploy
+            // Workflow YAML có hỗ trợ Tailscale + noVNC
+            const workflowYAML = `name: VPS Glass with Tailscale
 
 on:
   workflow_dispatch:
     inputs:
       duration:
-        description: 'Duration (minutes)'
+        description: 'Duration minutes'
         required: true
         default: '120'
       target_os:
         description: 'Target OS'
         required: true
         default: 'windows'
+
+env:
+  TS_AUTHKEY: \${{ secrets.TAILSCALE_AUTH_KEY }}
 
 jobs:
   windows:
@@ -531,27 +539,51 @@ jobs:
         run: |
           Set-ItemProperty -Path 'HKLM:\\System\\CurrentControlSet\\Control\\Terminal Server' -Name "fDenyTSConnections" -Value 0 -Force
           netsh advfirewall firewall add rule name="RDP" dir=in action=allow protocol=TCP localport=3389
-      - name: Create User & Pass
+      - name: Install Tailscale
+        if: env.TS_AUTHKEY != ''
+        run: |
+          choco install tailscale -y
+          tailscale login --auth-key \$env:TS_AUTHKEY
+          tailscale up
+      - name: Create User
         run: |
           $user = "glass_" + (Get-Random -Minimum 1000 -Maximum 9999)
-          $pass = -join (((65..90) + (97..122) + (48..57)) | Get-Random -Count 16 | ForEach-Object {[char]$_})
+          $pass = -join (((65..90) + (97..122) + (48..57)) | Get-Random -Count 14 | ForEach-Object {[char]$_})
           net user $user $pass /add
           net localgroup Administrators $user /add
-          echo "USERNAME=$user" >> $env:GITHUB_ENV
-          echo "PASSWORD=$pass" >> $env:GITHUB_ENV
-      - name: Get Public IP
+          echo "VM_USER=$user" >> $env:GITHUB_ENV
+          echo "VM_PASS=$pass" >> $env:GITHUB_ENV
+      - name: Get IP and Tailscale IP
         run: |
           $ip = (Invoke-WebRequest -Uri https://api.ipify.org -UseBasicParsing).Content
           echo "PUBLIC_IP=$ip" >> $env:GITHUB_ENV
+          if (Get-Command tailscale -ErrorAction SilentlyContinue) {
+            $tsIp = tailscale ip -4
+            echo "TS_IP=$tsIp" >> $env:GITHUB_ENV
+          }
+      - name: Setup noVNC
+        run: |
+          choco install novnc -y
+          Start-Process -NoNewWindow -FilePath "C:\\Program Files\\noVNC\\novnc.exe" -ArgumentList "--listen 6080"
       - name: Keep Alive
         run: |
           $dur = [int]"\${{ github.event.inputs.duration }}"
           $end = (Get-Date).AddMinutes($dur)
           while ((Get-Date) -lt $end) { Start-Sleep -Seconds 60 }
+      - name: Output Connection Info
+        run: |
+          Write-Host "========================================="
+          Write-Host "VM READY"
+          Write-Host "IP: \$env:PUBLIC_IP"
+          Write-Host "Tailscale IP: \$env:TS_IP"
+          Write-Host "User: \$env:VM_USER"
+          Write-Host "Password: \$env:VM_PASS"
+          Write-Host "noVNC: http://\$env:PUBLIC_IP:6080"
+          Write-Host "========================================="
 
-  linux:
+  ubuntu:
     runs-on: ubuntu-latest
-    if: github.event.inputs.target_os != 'windows'
+    if: github.event.inputs.target_os == 'ubuntu'
     timeout-minutes: 360
     steps:
       - name: Setup SSH
@@ -560,24 +592,44 @@ jobs:
           sudo apt install -y -qq openssh-server curl
           sudo systemctl enable ssh
           sudo systemctl start ssh
+      - name: Install Tailscale
+        if: env.TS_AUTHKEY != ''
+        run: |
+          curl -fsSL https://tailscale.com/install.sh | sh
+          sudo tailscale login --auth-key \$TS_AUTHKEY
+          sudo tailscale up
       - name: Create User
         run: |
           USER="glass_\$((RANDOM % 9000 + 1000))"
-          PASS=\$(openssl rand -base64 16 | tr -d '=+/' | cut -c1-20)
+          PASS=\$(openssl rand -base64 14 | tr -d '=+/' | cut -c1-14)
           sudo useradd -m -s /bin/bash "\$USER"
           echo "\$USER:\$PASS" | sudo chpasswd
           sudo usermod -aG sudo "\$USER"
-          echo "USERNAME=\$USER" >> \$GITHUB_ENV
-          echo "PASSWORD=\$PASS" >> \$GITHUB_ENV
-      - name: Get IP
+          echo "VM_USER=\$USER" >> \$GITHUB_ENV
+          echo "VM_PASS=\$PASS" >> \$GITHUB_ENV
+      - name: Setup noVNC
         run: |
-          IP=\$(curl -s https://api.ipify.org)
-          echo "PUBLIC_IP=\$IP" >> \$GITHUB_ENV
+          sudo apt install -y novnc websockify
+          websockify -D --web=/usr/share/novnc 6080 localhost:5900
       - name: Keep Alive
         run: |
           DUR=\${{ github.event.inputs.duration }}
           END=\$(( \$(date +%s) + DUR * 60 ))
           while [ \$(date +%s) -lt \$END ]; do sleep 60; done
+      - name: Output Info
+        run: |
+          IP=\$(curl -s https://api.ipify.org)
+          TS_IP=\$(tailscale ip -4 2>/dev/null || echo "")
+          echo "PUBLIC_IP=\$IP" >> \$GITHUB_ENV
+          echo "TS_IP=\$TS_IP" >> \$GITHUB_ENV
+          echo "========================================="
+          echo "VM READY"
+          echo "IP: \$IP"
+          echo "Tailscale IP: \$TS_IP"
+          echo "User: \$USER"
+          echo "Password: \$PASS"
+          echo "noVNC: http://\$IP:6080"
+          echo "========================================="
 `;
 
             const encodedContent = btoa(unescape(encodeURIComponent(workflowYAML)));
@@ -597,12 +649,27 @@ jobs:
 
             if (!uploadWorkflow.ok) throw new Error('Upload workflow thất bại');
 
-            // Lưu lại token, owner, repo
+            // Thêm secret Tailscale nếu có
+            const tailscaleToken = localStorage.getItem('tailscale_token');
+            if (tailscaleToken) {
+                await fetch(`https://api.github.com/repos/${owner}/${repoName}/actions/secrets/TAILSCALE_AUTH_KEY`, {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        encrypted_value: btoa(tailscaleToken),
+                        key_id: ''
+                    })
+                }).catch(e => console.log('Không thể thêm secret'));
+            }
+
             localStorage.setItem('gh_token', token);
             localStorage.setItem('gh_owner', owner);
             localStorage.setItem('gh_repo', repoName);
 
-            showStatus('setupStatus', `✅ Thành công! Repo: ${repoName} đã sẵn sàng.`, 'success');
+            showStatus('setupStatus', `✅ Thành công! Repo: ${repoName}`, 'success');
             await new Promise(r => setTimeout(r, 1000));
             await createVM();
 
@@ -621,7 +688,7 @@ jobs:
         if (!token || !owner || !repo) {
             const freshToken = document.getElementById('github_token').value.trim();
             if (!freshToken) {
-                alert('Cần nhập GitHub Token và chạy "Tự động tạo repo" trước');
+                alert('Cần nhập GitHub Token và chạy "Tạo repo + Deploy" trước');
                 return;
             }
             await setupAndDeploy();
@@ -652,38 +719,37 @@ jobs:
             });
 
             if (res.ok) {
-                const osName = targetOS === 'windows' ? 'Windows 11' : (targetOS === 'ubuntu' ? 'Ubuntu 22.04' : 'Debian 12');
-                addVirtualVM({
+                const osName = targetOS === 'windows' ? 'Windows 11' : 'Ubuntu 22.04';
+                addVM({
                     name: osName,
                     ip: 'Đang khởi tạo...',
-                    user: 'Đang tạo...',
-                    pass: 'Đang tạo...',
-                    duration: parseInt(duration)
+                    tailscaleIp: 'Đang khởi tạo...',
+                    user: 'Đang khởi tạo...',
+                    pass: 'Đang khởi tạo...',
+                    duration: parseInt(duration),
+                    novncUrl: ''
                 });
-                showStatus('deployStatus', '✅ Workflow đã kích hoạt! VM sẽ xuất hiện sau 2-3 phút.', 'success');
+                showStatus('deployStatus', '✅ VM đang được tạo (2-3 phút sau có thông tin)', 'success');
             } else {
-                const errorText = await res.text();
-                throw new Error(`HTTP ${res.status}: ${errorText.slice(0, 100)}`);
+                throw new Error(`HTTP ${res.status}`);
             }
         } catch (err) {
             showStatus('deployStatus', `❌ Lỗi: ${err.message}`, 'error');
         } finally {
             document.getElementById('deployBtn').disabled = false;
-            setTimeout(() => {
-                const st = document.getElementById('deployStatus');
-                if (st) st.classList.remove('show');
-            }, 4000);
         }
     }
 
     // Quản lý VM hiển thị
-    function addVirtualVM(vm) {
+    function addVM(vm) {
         const newVM = {
             id: Date.now() + '_' + Math.random(),
             name: vm.name,
             ip: vm.ip,
+            tailscaleIp: vm.tailscaleIp,
             user: vm.user,
             password: vm.pass,
+            novncUrl: vm.novncUrl,
             durationMinutes: vm.duration,
             createdAt: Date.now(),
             expanded: false
@@ -696,14 +762,59 @@ jobs:
 
     function removeVM(id) {
         vmDatabase = vmDatabase.filter(v => v.id !== id);
+        if (activeVMId === id) {
+            activeVMId = null;
+            document.getElementById('novncContainer').innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100%;background:#0a0e1a;color:#6c7a9e;">⚡ Chọn một VM để kết nối noVNC</div>';
+            document.getElementById('rdpGuide').style.display = 'none';
+        }
         saveVMToLocal();
         renderVMList();
     }
 
-    function toggleExpand(id) {
+    function connectToVM(id) {
         const vm = vmDatabase.find(v => v.id === id);
-        if (vm) vm.expanded = !vm.expanded;
+        if (!vm) return;
+        activeVMId = id;
+
+        // Cập nhật noVNC container
+        const novncDiv = document.getElementById('novncContainer');
+        if (vm.novncUrl && vm.novncUrl !== '') {
+            novncDiv.innerHTML = `<iframe src="${vm.novncUrl}"></iframe>`;
+        } else {
+            novncDiv.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100%;background:#0a0e1a;color:#ffcc66;">⏳ Đang chờ thông tin noVNC từ VM...</div>';
+        }
+
+        // Hiển thị hướng dẫn RDP qua Tailscale
+        const guide = document.getElementById('rdpGuide');
+        if (vm.tailscaleIp && vm.tailscaleIp !== 'Đang khởi tạo...') {
+            guide.style.display = 'block';
+            guide.innerHTML = `🔌 <strong>Kết nối RDP qua Tailscale:</strong><br>
+            - Tailscale IP: <code>${vm.tailscaleIp}</code><br>
+            - User: <code>${vm.user}</code><br>
+            - Password: <code>${vm.password}</code><br>
+            - Dùng Remote Desktop kết nối tới ${vm.tailscaleIp}:3389 (Windows) hoặc SSH port 22 (Linux)`;
+        } else {
+            guide.style.display = 'block';
+            guide.innerHTML = `⏳ Đang chờ Tailscale IP... Thông tin sẽ cập nhật sau 2-3 phút.`;
+        }
+
         renderVMList();
+    }
+
+    function updateVMInfo(id, ip, tailscaleIp, user, pass, novncUrl) {
+        const vm = vmDatabase.find(v => v.id === id);
+        if (vm) {
+            if (ip) vm.ip = ip;
+            if (tailscaleIp) vm.tailscaleIp = tailscaleIp;
+            if (user) vm.user = user;
+            if (pass) vm.password = pass;
+            if (novncUrl) vm.novncUrl = novncUrl;
+            saveVMToLocal();
+            renderVMList();
+            if (activeVMId === id) {
+                connectToVM(id);
+            }
+        }
     }
 
     function getRemainingSec(vm) {
@@ -743,8 +854,9 @@ jobs:
 
     function saveVMToLocal() {
         const toStore = vmDatabase.map(v => ({
-            id: v.id, name: v.name, ip: v.ip, user: v.user, password: v.password,
-            durationMinutes: v.durationMinutes, createdAt: v.createdAt, expanded: false
+            id: v.id, name: v.name, ip: v.ip, tailscaleIp: v.tailscaleIp,
+            user: v.user, password: v.password, novncUrl: v.novncUrl,
+            durationMinutes: v.durationMinutes, createdAt: v.createdAt
         }));
         localStorage.setItem('vpsglass_vms', JSON.stringify(toStore));
     }
@@ -754,7 +866,6 @@ jobs:
         if (stored) {
             try {
                 vmDatabase = JSON.parse(stored);
-                vmDatabase.forEach(v => { v.expanded = false; });
                 renderVMList();
                 vmDatabase.forEach(v => startTimerForVM(v.id));
             } catch(e) { vmDatabase = []; }
@@ -765,29 +876,29 @@ jobs:
         const container = document.getElementById('vmList');
         if (!container) return;
         if (vmDatabase.length === 0) {
-            container.innerHTML = '<div class="empty-state">✨ Chưa có VM nào<br>Bấm "Tự động tạo repo + Deploy VM"</div>';
+            container.innerHTML = '<div style="text-align:center; padding:40px; color:#8A9FD0;">✨ Chưa có VM nào</div>';
             return;
         }
         let html = '';
         for (let vm of vmDatabase) {
-            const isWin = vm.name.includes('Windows');
+            const isActive = (activeVMId === vm.id);
+            const activeClass = isActive ? 'active' : '';
             html += `
-                <div class="vm-card ${vm.expanded ? 'expanded' : ''}" onclick="toggleExpand('${vm.id}')">
-                    <div class="vm-header">
-                        <div class="vm-os"><span>${isWin ? '🪟' : '🐧'}</span> ${escapeHtml(vm.name)}</div>
-                        <div class="vm-timer" id="timer-${vm.id}">${formatTime(getRemainingSec(vm))}</div>
+                <div class="vm-item ${activeClass}" onclick="connectToVM('${vm.id}')">
+                    <div class="vm-name">
+                        <span>${vm.name === 'Windows 11' ? '🪟' : '🐧'} ${escapeHtml(vm.name)}</span>
+                        <span class="vm-timer" id="timer-${vm.id}">${formatTime(getRemainingSec(vm))}</span>
                     </div>
                     <div class="vm-info">
-                        <span>${isWin ? 'RDP' : 'SSH'}: ${escapeHtml(vm.ip)}</span>
+                        <span>🌍 ${escapeHtml(vm.ip)}</span>
+                        ${vm.tailscaleIp && vm.tailscaleIp !== 'Đang khởi tạo...' ? `<span>🔒 ${escapeHtml(vm.tailscaleIp)}</span>` : ''}
+                    </div>
+                    <div class="vm-info">
                         <span>👤 ${escapeHtml(vm.user)}</span>
+                        <span>🔑 ${escapeHtml(vm.password)}</span>
                     </div>
-                    <div class="vm-detail">
-                        <div class="detail-row">
-                            <div>🌍 IP: <b>${escapeHtml(vm.ip)}</b></div>
-                            <div>🔑 Pass: <b>${escapeHtml(vm.password)}</b></div>
-                        </div>
-                        <button class="btn-delete" onclick="event.stopPropagation(); removeVM('${vm.id}')">🗑️ Xóa VM</button>
-                    </div>
+                    <button class="btn-connect" onclick="event.stopPropagation(); connectToVM('${vm.id}')">🔌 Kết nối noVNC</button>
+                    <button class="btn-connect" onclick="event.stopPropagation(); removeVM('${vm.id}')" style="background:rgba(255,80,80,0.2);">🗑️ Xóa</button>
                 </div>
             `;
         }
@@ -810,17 +921,16 @@ jobs:
         loadVMFromLocal();
         const savedToken = localStorage.getItem('gh_token');
         if (savedToken) document.getElementById('github_token').value = savedToken;
-        setInterval(() => {
-            for (let vm of vmDatabase) {
-                if (getRemainingSec(vm) <= 0) removeVM(vm.id);
-            }
-        }, 5000);
+        const savedTailscale = localStorage.getItem('tailscale_token');
+        if (savedTailscale) document.getElementById('tailscale_token').value = savedTailscale;
     };
 
+    // Export functions
     window.setupAndDeploy = setupAndDeploy;
     window.createVM = createVM;
     window.removeVM = removeVM;
-    window.toggleExpand = toggleExpand;
+    window.connectToVM = connectToVM;
+    window.saveTailscaleToken = saveTailscaleToken;
 </script>
 </body>
 </html>
