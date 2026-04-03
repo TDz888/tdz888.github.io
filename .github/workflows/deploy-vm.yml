@@ -1,58 +1,37 @@
-name: NEURAL MASTER SYSTEM
+name: Neural VM Deploy
 
 on:
   workflow_dispatch:
     inputs:
       duration:
-        description: Session Duration
+        description: 'Duration minutes'
         required: true
-        default: 2h
-        type: choice
-        options:
-          - 30m
-          - 1h
-          - 2h
-          - 4h
-          - 6h
+        default: '120'
       target_os:
-        description: Target OS
+        description: 'Target OS'
         required: true
-        default: windows
-        type: choice
-        options:
-          - windows
-          - ubuntu22
-          - ubuntu24
-          - debian
-          - centos
-          - almalinux
-          - all
+        default: 'windows'
       performance_mode:
-        description: Performance Mode
+        description: 'Performance'
         required: false
-        default: balanced
-        type: choice
-        options:
-          - balanced
-          - performance
-          - quantum
+        default: 'balanced'
 
 env:
   TAILSCALE_AUTH_KEY: ${{ secrets.TAILSCALE_AUTH_KEY }}
 
 jobs:
-  windows_deploy:
+  windows:
     runs-on: windows-latest
-    if: github.event.inputs.target_os == 'windows' || github.event.inputs.target_os == 'all'
+    if: github.event.inputs.target_os == 'windows'
     timeout-minutes: 360
     steps:
-      - name: Enable Remote Desktop
+      - name: Enable RDP
         run: |
           Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server' -Name "fDenyTSConnections" -Value 0 -Force
           netsh advfirewall firewall add rule name="RDP" dir=in action=allow protocol=TCP localport=3389
-      - name: Create User Account
+      - name: Create User
         run: |
-          $user = "neural_" + (Get-Random -Minimum 1000 -Maximum 9999)
+          $user = "vmuser_" + (Get-Random -Minimum 1000 -Maximum 9999)
           $pass = -join (((65..90) + (97..122) + (48..57)) | Get-Random -Count 16 | ForEach-Object {[char]$_})
           net user $user $pass /add
           net localgroup Administrators $user /add
@@ -62,35 +41,36 @@ jobs:
         run: |
           $ip = (Invoke-WebRequest -Uri https://api.ipify.org -UseBasicParsing).Content
           echo "PUBLIC_IP=$ip" >> $env:GITHUB_ENV
-      - name: Install Tailscale
+      - name: Get Tailscale IP
         if: env.TAILSCALE_AUTH_KEY != ''
         run: |
-          Invoke-WebRequest -Uri "https://pkgs.tailscale.com/stable/tailscale-setup-latest-amd64.msi" -OutFile "$env:TEMP\tailscale.msi"
-          msiexec /i "$env:TEMP\tailscale.msi" /quiet
+          Invoke-WebRequest -Uri "https://pkgs.tailscale.com/stable/tailscale-setup-latest-amd64.msi" -OutFile tailscale.msi
+          msiexec /i tailscale.msi /quiet
           Start-Sleep -Seconds 10
           & 'C:\Program Files\Tailscale\tailscale.exe' up --authkey="$env:TAILSCALE_AUTH_KEY" --accept-routes
+          $tsIp = & 'C:\Program Files\Tailscale\tailscale.exe' ip -4
+          echo "TAILSCALE_IP=$tsIp" >> $env:GITHUB_ENV
       - name: Keep Alive
         run: |
-          $duration = 120
-          $end = (Get-Date).AddMinutes($duration)
+          $dur = [int]"${{ github.event.inputs.duration }}"
+          $end = (Get-Date).AddMinutes($dur)
           while ((Get-Date) -lt $end) {
-            $remaining = $end - (Get-Date)
-            Write-Host "Windows VM Active - Time remaining: $($remaining.ToString())"
+            Write-Host "Windows VM Active - Time remaining: $($end - (Get-Date))"
             Start-Sleep -Seconds 60
           }
 
-  ubuntu_deploy:
+  ubuntu22:
     runs-on: ubuntu-22.04
-    if: github.event.inputs.target_os == 'ubuntu22' || github.event.inputs.target_os == 'all'
+    if: github.event.inputs.target_os == 'ubuntu22'
     timeout-minutes: 360
     steps:
-      - name: Install SSH Server
+      - name: Setup SSH
         run: |
           sudo apt update -qq
           sudo apt install -y -qq openssh-server
           sudo systemctl enable ssh
           sudo systemctl start ssh
-      - name: Create User Account
+      - name: Create User
         run: |
           USER="ub_$((RANDOM % 9000 + 1000))"
           PASS=$(openssl rand -base64 16 | tr -d '=+/' | cut -c1-20)
@@ -107,30 +87,30 @@ jobs:
         if: env.TAILSCALE_AUTH_KEY != ''
         run: |
           curl -fsSL https://tailscale.com/install.sh | sh
-          sudo tailscale up --auth-key="$TAILSCALE_AUTH_KEY" --accept-routes --accept-dns
+          sudo tailscale up --auth-key="$TAILSCALE_AUTH_KEY" --accept-routes
+          TS_IP=$(tailscale ip -4)
+          echo "TAILSCALE_IP=$TS_IP" >> $GITHUB_ENV
       - name: Keep Alive
         run: |
-          DURATION=120
-          START=$(date +%s)
-          END=$((START + DURATION * 60))
+          DUR=${{ github.event.inputs.duration }}
+          END=$(( $(date +%s) + DUR * 60 ))
           while [ $(date +%s) -lt $END ]; do
-            REMAINING=$((END - $(date +%s)))
-            echo "Ubuntu VM Active - Time remaining: $((REMAINING / 60)) minutes"
+            echo "Ubuntu VM Active - Time remaining: $(( ($END - $(date +%s)) / 60 )) minutes"
             sleep 60
           done
 
-  ubuntu24_deploy:
+  ubuntu24:
     runs-on: ubuntu-24.04
-    if: github.event.inputs.target_os == 'ubuntu24' || github.event.inputs.target_os == 'all'
+    if: github.event.inputs.target_os == 'ubuntu24'
     timeout-minutes: 360
     steps:
-      - name: Install SSH Server
+      - name: Setup SSH
         run: |
           sudo apt update -qq
           sudo apt install -y -qq openssh-server
           sudo systemctl enable ssh
           sudo systemctl start ssh
-      - name: Create User Account
+      - name: Create User
         run: |
           USER="ub24_$((RANDOM % 9000 + 1000))"
           PASS=$(openssl rand -base64 16 | tr -d '=+/' | cut -c1-20)
@@ -147,32 +127,32 @@ jobs:
         if: env.TAILSCALE_AUTH_KEY != ''
         run: |
           curl -fsSL https://tailscale.com/install.sh | sh
-          sudo tailscale up --auth-key="$TAILSCALE_AUTH_KEY" --accept-routes --accept-dns
+          sudo tailscale up --auth-key="$TAILSCALE_AUTH_KEY" --accept-routes
+          TS_IP=$(tailscale ip -4)
+          echo "TAILSCALE_IP=$TS_IP" >> $GITHUB_ENV
       - name: Keep Alive
         run: |
-          DURATION=120
-          START=$(date +%s)
-          END=$((START + DURATION * 60))
+          DUR=${{ github.event.inputs.duration }}
+          END=$(( $(date +%s) + DUR * 60 ))
           while [ $(date +%s) -lt $END ]; do
-            REMAINING=$((END - $(date +%s)))
-            echo "Ubuntu 24.04 VM Active - Time remaining: $((REMAINING / 60)) minutes"
+            echo "Ubuntu 24.04 VM Active"
             sleep 60
           done
 
-  debian_deploy:
+  debian:
     runs-on: ubuntu-latest
     container:
       image: debian:12
-    if: github.event.inputs.target_os == 'debian' || github.event.inputs.target_os == 'all'
+    if: github.event.inputs.target_os == 'debian'
     timeout-minutes: 360
     steps:
-      - name: Install SSH Server
+      - name: Setup SSH
         run: |
           apt update -qq
           apt install -y -qq openssh-server sudo curl
           ssh-keygen -A
           /usr/sbin/sshd
-      - name: Create User Account
+      - name: Create User
         run: |
           USER="deb_$((RANDOM % 9000 + 1000))"
           PASS=$(openssl rand -base64 16 | tr -d '=+/' | cut -c1-20)
@@ -189,31 +169,27 @@ jobs:
         if: env.TAILSCALE_AUTH_KEY != ''
         run: |
           curl -fsSL https://tailscale.com/install.sh | sh
-          tailscale up --auth-key="$TAILSCALE_AUTH_KEY" --accept-routes --accept-dns
+          tailscale up --auth-key="$TAILSCALE_AUTH_KEY" --accept-routes
+          TS_IP=$(tailscale ip -4)
+          echo "TAILSCALE_IP=$TS_IP" >> $GITHUB_ENV
       - name: Keep Alive
         run: |
-          DURATION=120
-          START=$(date +%s)
-          END=$((START + DURATION * 60))
-          while [ $(date +%s) -lt $END ]; do
-            REMAINING=$((END - $(date +%s)))
-            echo "Debian VM Active - Time remaining: $((REMAINING / 60)) minutes"
-            sleep 60
-          done
+          DUR=${{ github.event.inputs.duration }}
+          sleep $((DUR * 60))
 
-  centos_deploy:
+  centos:
     runs-on: ubuntu-latest
     container:
       image: quay.io/centos/centos:stream9
-    if: github.event.inputs.target_os == 'centos' || github.event.inputs.target_os == 'all'
+    if: github.event.inputs.target_os == 'centos'
     timeout-minutes: 360
     steps:
-      - name: Install SSH Server
+      - name: Setup SSH
         run: |
           dnf install -y openssh-server sudo curl
           ssh-keygen -A
           /usr/sbin/sshd
-      - name: Create User Account
+      - name: Create User
         run: |
           USER="cent_$((RANDOM % 9000 + 1000))"
           PASS=$(openssl rand -base64 16 | tr -d '=+/' | cut -c1-20)
@@ -230,31 +206,27 @@ jobs:
         if: env.TAILSCALE_AUTH_KEY != ''
         run: |
           curl -fsSL https://tailscale.com/install.sh | sh
-          tailscale up --auth-key="$TAILSCALE_AUTH_KEY" --accept-routes --accept-dns
+          tailscale up --auth-key="$TAILSCALE_AUTH_KEY" --accept-routes
+          TS_IP=$(tailscale ip -4)
+          echo "TAILSCALE_IP=$TS_IP" >> $GITHUB_ENV
       - name: Keep Alive
         run: |
-          DURATION=120
-          START=$(date +%s)
-          END=$((START + DURATION * 60))
-          while [ $(date +%s) -lt $END ]; do
-            REMAINING=$((END - $(date +%s)))
-            echo "CentOS VM Active - Time remaining: $((REMAINING / 60)) minutes"
-            sleep 60
-          done
+          DUR=${{ github.event.inputs.duration }}
+          sleep $((DUR * 60))
 
-  almalinux_deploy:
+  almalinux:
     runs-on: ubuntu-latest
     container:
       image: almalinux:9
-    if: github.event.inputs.target_os == 'almalinux' || github.event.inputs.target_os == 'all'
+    if: github.event.inputs.target_os == 'almalinux'
     timeout-minutes: 360
     steps:
-      - name: Install SSH Server
+      - name: Setup SSH
         run: |
           dnf install -y openssh-server sudo curl
           ssh-keygen -A
           /usr/sbin/sshd
-      - name: Create User Account
+      - name: Create User
         run: |
           USER="alma_$((RANDOM % 9000 + 1000))"
           PASS=$(openssl rand -base64 16 | tr -d '=+/' | cut -c1-20)
@@ -271,14 +243,10 @@ jobs:
         if: env.TAILSCALE_AUTH_KEY != ''
         run: |
           curl -fsSL https://tailscale.com/install.sh | sh
-          tailscale up --auth-key="$TAILSCALE_AUTH_KEY" --accept-routes --accept-dns
+          tailscale up --auth-key="$TAILSCALE_AUTH_KEY" --accept-routes
+          TS_IP=$(tailscale ip -4)
+          echo "TAILSCALE_IP=$TS_IP" >> $GITHUB_ENV
       - name: Keep Alive
         run: |
-          DURATION=120
-          START=$(date +%s)
-          END=$((START + DURATION * 60))
-          while [ $(date +%s) -lt $END ]; do
-            REMAINING=$((END - $(date +%s)))
-            echo "AlmaLinux VM Active - Time remaining: $((REMAINING / 60)) minutes"
-            sleep 60
-          done
+          DUR=${{ github.event.inputs.duration }}
+          sleep $((DUR * 60))
