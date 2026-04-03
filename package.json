@@ -1,0 +1,12 @@
+{
+  "name": "vps-generator",
+  "version": "1.0.0",
+  "description": "VPS Generator using GitHub Actions",
+  "main": "index.js",
+  "scripts": {
+    "dev": "vercel dev",
+    "deploy": "vercel deploy --prod"
+  },
+  "author": "TDz888",
+  "license": "MIT"
+}
